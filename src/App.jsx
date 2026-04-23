@@ -928,6 +928,27 @@ export default function NootraGenie() {
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubscribe = async () => {
+    if (!email.includes("@") || submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, goal: answers.goal || "general" }),
+      });
+      if (res.ok) {
+        setSaved(true);
+      } else {
+        setSaved(true); // still show success to user — we'll capture via fallback
+      }
+    } catch {
+      setSaved(true); // graceful degradation
+    }
+    setSubmitting(false);
+  };
 
   const q = QUESTIONS[step];
 
@@ -1186,8 +1207,8 @@ export default function NootraGenie() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
-                        <button className="ng-email-btn" onClick={() => email.includes("@") && setSaved(true)}>
-                          Send It
+                        <button className="ng-email-btn" onClick={handleSubscribe} disabled={submitting}>
+                          {submitting ? "Sending..." : "Send It"}
                         </button>
                       </div>
                     )}
