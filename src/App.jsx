@@ -110,10 +110,28 @@ const QUESTIONS = [
     ],
   },
   {
+    id: "medications",
+    label: "09 — MEDICATIONS",
+    question: "Are you taking any prescription medications?",
+    sub: "This is critical for your safety. Some supplements interact with medications. Select all that apply.",
+    multi: true,
+    options: [
+      { value: "ssri", label: "SSRIs / SNRIs", desc: "Zoloft, Lexapro, Prozac, Effexor, etc." },
+      { value: "blood_thinners", label: "Blood Thinners", desc: "Warfarin, Eliquis, Xarelto, aspirin therapy" },
+      { value: "blood_pressure", label: "Blood Pressure Meds", desc: "Lisinopril, Amlodipine, Metoprolol, etc." },
+      { value: "stimulants", label: "ADHD Stimulants", desc: "Adderall, Vyvanse, Ritalin, Concerta" },
+      { value: "thyroid", label: "Thyroid Medication", desc: "Levothyroxine, Synthroid, Armour" },
+      { value: "benzos", label: "Benzodiazepines", desc: "Xanax, Ativan, Klonopin, Valium" },
+      { value: "immunosuppressants", label: "Immunosuppressants", desc: "Post-transplant, autoimmune treatments" },
+      { value: "diabetes", label: "Diabetes Medication", desc: "Metformin, insulin, sulfonylureas" },
+      { value: "none", label: "No prescription medications" },
+    ],
+  },
+  {
     id: "freetext",
-    label: "09 — YOUR WORDS",
+    label: "10 — YOUR WORDS",
     question: "Anything else the Genie should know?",
-    sub: "Medications, conditions, lifestyle details, past supplement experiences — whatever might matter. Totally optional.",
+    sub: "Conditions, lifestyle details, past supplement experiences — whatever might matter. Totally optional.",
     freetext: true,
   },
 ];
@@ -121,9 +139,9 @@ const QUESTIONS = [
 const ANALYSIS_STEPS = [
   "Reading your neurochemical profile",
   "Matching compounds to goals",
-  "Scanning for interactions",
+  "Scanning medication interactions",
+  "Filtering unsafe combinations",
   "Dialing in dosages",
-  "Applying your filters",
   "Summoning your protocol",
 ];
 
@@ -178,20 +196,114 @@ const GOAL_SUMMARIES = {
   sleep: "Targets both sleep onset and deep sleep architecture. Better sleep amplifies everything else — memory, mood, focus all improve with proper overnight recovery.",
 };
 
+// Medication interaction map: medication -> { exclude: [...], warn: [...] }
+// exclude = do not recommend at all
+// warn = can recommend but must flag with specific warning
+const MED_INTERACTIONS = {
+  ssri: {
+    exclude: ["rhodiola"],
+    warn: {
+      ashwagandha: "Ashwagandha may amplify serotonergic effects when combined with SSRIs/SNRIs. Use only under medical supervision and start at half dose.",
+      l_theanine: "L-Theanine is generally considered safe with SSRIs but may enhance sedation. Monitor how you feel and discuss with your prescriber.",
+      omega3: "High-dose Omega-3 may have mild serotonergic activity. Generally safe with SSRIs but mention to your doctor.",
+    },
+    note: "You're taking SSRIs/SNRIs. We've excluded Rhodiola (risk of serotonin syndrome) and flagged supplements that may interact with serotonergic medications."
+  },
+  blood_thinners: {
+    exclude: ["omega3", "lions_mane"],
+    warn: {
+      ashwagandha: "Limited evidence suggests Ashwagandha may have mild antiplatelet effects. Discuss with your prescriber before adding this.",
+    },
+    note: "You're on blood thinners. We've excluded Omega-3 (blood-thinning effects stack) and Lion's Mane (may inhibit platelet aggregation). Your clotting balance is critical — do not add supplements without your doctor's approval."
+  },
+  blood_pressure: {
+    exclude: [],
+    warn: {
+      ashwagandha: "Ashwagandha may lower blood pressure. Combined with BP medication this could cause hypotension. Monitor carefully and start at half dose.",
+      magnesium: "Magnesium can lower blood pressure. Combined with BP medication, monitor for dizziness or lightheadedness. Start low.",
+      rhodiola: "Rhodiola may affect blood pressure regulation. Use cautiously alongside BP medications.",
+    },
+    note: "You're taking blood pressure medication. Several nootropics can affect BP — we've flagged ones that need monitoring. Check with your prescriber before starting."
+  },
+  stimulants: {
+    exclude: [],
+    warn: {
+      alpha_gpc: "Alpha-GPC increases acetylcholine, which may amplify stimulant side effects like jitteriness or anxiety. Start at half dose and assess tolerance.",
+      cdp_choline: "Citicoline increases acetylcholine and dopamine receptor density. May intensify ADHD medication effects. Start low.",
+      rhodiola: "Rhodiola supports dopamine metabolism. May feel overstimulating combined with ADHD stimulants. Use on off-days or at reduced dose.",
+    },
+    note: "You're taking ADHD stimulants. We've flagged supplements that affect dopamine and acetylcholine pathways to avoid overstimulation. Start any new supplement on a day you're NOT taking your stimulant to gauge effects separately."
+  },
+  thyroid: {
+    exclude: ["ashwagandha"],
+    warn: {
+      magnesium: "Take Magnesium at least 4 hours apart from thyroid medication — it can reduce absorption of levothyroxine.",
+      omega3: "Take Omega-3 at least 4 hours apart from thyroid medication to avoid absorption interference.",
+    },
+    note: "You're on thyroid medication. We've excluded Ashwagandha (directly affects thyroid hormone levels and can destabilize your dosing). Take any supplements at least 4 hours apart from your thyroid medication."
+  },
+  benzos: {
+    exclude: ["ashwagandha", "apigenin"],
+    warn: {
+      magnesium: "Magnesium enhances GABA activity and may amplify benzodiazepine sedation. Use with caution and discuss with your prescriber.",
+      l_theanine: "L-Theanine promotes relaxation via GABA pathways. May increase sedation when combined with benzodiazepines. Start at half dose.",
+    },
+    note: "You're taking benzodiazepines. We've excluded supplements with strong GABAergic effects (Ashwagandha, Apigenin) to avoid excessive sedation. Be cautious with anything that promotes relaxation."
+  },
+  immunosuppressants: {
+    exclude: ["lions_mane", "ashwagandha"],
+    warn: {
+      omega3: "High-dose Omega-3 may modulate immune function. Discuss with your transplant team or immunologist before adding.",
+    },
+    note: "You're on immunosuppressants. We've excluded Lion's Mane (stimulates nerve growth factor and may modulate immune response) and Ashwagandha (immune-stimulating properties that could interfere with immunosuppression). Only add supplements with your specialist's approval."
+  },
+  diabetes: {
+    exclude: [],
+    warn: {
+      ashwagandha: "Ashwagandha may lower blood sugar. Combined with diabetes medication, this could cause hypoglycemia. Monitor blood sugar closely.",
+      magnesium: "Magnesium affects insulin sensitivity and glucose metabolism. May require adjustment of diabetes medication. Monitor levels.",
+      creatine: "Creatine can affect creatinine levels in blood tests, which may interfere with kidney function monitoring common in diabetes management.",
+    },
+    note: "You're taking diabetes medication. Several supplements can affect blood sugar levels. We've flagged ones that need careful monitoring. Check with your endocrinologist before starting."
+  },
+};
+
 function buildStack(answers) {
-  const { goal, secondary, experience, stimulant, budget, current = [], restrictions = [] } = answers;
+  const { goal, secondary, experience, stimulant, budget, current = [], restrictions = [], medications = [] } = answers;
   const isTaking = (s) => current.includes(s);
   const noMushroom = restrictions.includes("no_mushroom");
   const noFish = restrictions.includes("no_fish");
   const vegan = restrictions.includes("vegan");
   const isBeginner = experience === "beginner" || experience === "some";
   const maxSupps = isBeginner ? 3 : budget === "low" ? 3 : budget === "medium" ? 4 : 6;
+  const hasMeds = medications.length > 0 && !medications.includes("none");
+
+  // Build exclusion and warning lists from medications
+  const excluded = new Set();
+  const suppWarnings = {};
+  const medNotes = [];
+
+  if (hasMeds) {
+    medications.forEach((med) => {
+      const interactions = MED_INTERACTIONS[med];
+      if (!interactions) return;
+      interactions.exclude.forEach((s) => excluded.add(s));
+      Object.entries(interactions.warn || {}).forEach(([supp, warning]) => {
+        if (!suppWarnings[supp]) suppWarnings[supp] = [];
+        suppWarnings[supp].push(warning);
+      });
+      medNotes.push(interactions.note);
+    });
+  }
 
   const primary = GOAL_MAP[goal] || GOAL_MAP.focus;
   const sec = SECONDARY_MAP[secondary] || [];
   const combined = [...new Set([...primary, ...sec])];
 
   const filtered = combined.filter((k) => {
+    // Medication exclusions
+    if (excluded.has(k)) return false;
+    // Dietary / current stack exclusions
     if (k === "lions_mane" && (isTaking("lions_mane") || noMushroom)) return false;
     if (k === "omega3" && (isTaking("fish_oil") || noFish || vegan)) return false;
     if (k === "ashwagandha" && isTaking("ashwagandha")) return false;
@@ -204,6 +316,10 @@ function buildStack(answers) {
   const selected = filtered.slice(0, maxSupps).map((k) => {
     const s = { ...SUPPS[k] };
     if (stimulant === "sensitive" && s.sensitiveDose) s.dosage = s.sensitiveDose;
+    // Attach medication warnings to individual supplements
+    if (suppWarnings[k]) {
+      s.medWarning = suppWarnings[k].join(" ");
+    }
     return s;
   });
 
@@ -217,13 +333,18 @@ function buildStack(answers) {
 
   const costs = { low: "$25–35/mo", medium: "$40–60/mo", high: "$55–85/mo", unlimited: "$70–110/mo" };
 
+  // Build warnings string
+  let warnings = "Consult a healthcare provider before starting any new supplement, especially if you take prescription medications. Start one supplement at a time, spaced a week apart, so you can isolate what works. If you experience headaches, reduce your choline source dosage.";
+
   return {
     label: GOAL_LABELS[goal] || "Your Protocol",
     summary: GOAL_SUMMARIES[goal] || GOAL_SUMMARIES.focus,
     supplements: selected,
     schedule,
     totalCost: costs[budget] || "$40–60/mo",
-    warnings: "Consult a healthcare provider before starting any new supplement, especially if you take prescription medications. Start one supplement at a time, spaced a week apart, so you can isolate what works. If you experience headaches, reduce your choline source dosage.",
+    warnings,
+    medNotes: hasMeds ? medNotes : [],
+    excludedSupps: hasMeds ? [...excluded] : [],
   };
 }
 
@@ -820,6 +941,54 @@ body {
 
 .ng-warn strong { color: var(--danger); font-weight: 500; }
 
+.ng-med-section {
+  margin-top: 20px;
+}
+
+.ng-med-alert {
+  background: rgba(220,107,90,0.08);
+  border: 1px solid rgba(220,107,90,0.15);
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+
+.ng-med-alert-title {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--danger); margin-bottom: 8px; font-weight: 500;
+}
+
+.ng-med-alert p {
+  font-size: 14px; font-weight: 300; color: var(--ink2); line-height: 1.6;
+}
+
+.ng-med-excluded {
+  background: rgba(220,107,90,0.05);
+  border: 1px solid rgba(220,107,90,0.1);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  font-size: 13px; color: var(--ink3); font-weight: 300; line-height: 1.6;
+}
+
+.ng-med-excluded strong { color: var(--danger); font-weight: 500; }
+
+.ng-supp-med-warn {
+  background: rgba(220,107,90,0.06);
+  border-left: 3px solid var(--danger);
+  padding: 10px 14px;
+  margin-top: 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.5;
+}
+
+.ng-supp-med-warn::before {
+  content: "⚠ Medication Note: ";
+  font-weight: 500;
+  color: var(--danger);
+}
+
 /* CTA */
 .ng-cta-box {
   background: var(--white);
@@ -1059,7 +1228,7 @@ export default function NootraGenie() {
                 {q.freetext ? (
                   <div>
                     <div className="ng-freetext-tags">
-                      {["I take SSRIs", "ADHD", "Night shifts", "Headache-prone", "Intermittent fasting", "High BP"].map((t) => (
+                      {["ADHD diagnosis", "Night shifts", "Headache-prone", "Intermittent fasting", "Over 50", "Perimenopause"].map((t) => (
                         <span key={t} className="ng-ft-tag" onClick={() => {
                           const c = answers[q.id] || "";
                           setAnswers({ ...answers, [q.id]: c ? `${c}, ${t.toLowerCase()}` : t.toLowerCase() });
@@ -1140,6 +1309,9 @@ export default function NootraGenie() {
                       <span className="ng-tag">{answers.goal}</span>
                       <span className="ng-tag">{answers.budget} budget</span>
                       <span className="ng-tag">Est. {results.totalCost}</span>
+                      {results.medNotes && results.medNotes.length > 0 && (
+                        <span className="ng-tag" style={{ background: 'rgba(220,107,90,0.08)', borderColor: 'rgba(220,107,90,0.2)', color: 'var(--danger)' }}>⚠ Med-Filtered</span>
+                      )}
                     </div>
                   </div>
 
@@ -1163,6 +1335,9 @@ export default function NootraGenie() {
                       </div>
                       {s.detail && <div className="ng-supp-detail">{s.detail}</div>}
                       <div className="ng-supp-reason">{s.reason}</div>
+                      {s.medWarning && (
+                        <div className="ng-supp-med-warn">{s.medWarning}</div>
+                      )}
                       <div className="ng-supp-meta">
                         <div className="ng-meta"><b>When:</b> {s.timing}</div>
                         <div className="ng-meta"><b>Onset:</b> {s.onset}</div>
@@ -1186,6 +1361,23 @@ export default function NootraGenie() {
                         ))}
                       </div>
                     </>
+                  )}
+
+                  {results.medNotes && results.medNotes.length > 0 && (
+                    <div className="ng-med-section">
+                      <div className="ng-section-title">Medication Interactions</div>
+                      {results.medNotes.map((note, i) => (
+                        <div className="ng-med-alert" key={i}>
+                          <div className="ng-med-alert-title">Safety Alert</div>
+                          <p>{note}</p>
+                        </div>
+                      ))}
+                      {results.excludedSupps && results.excludedSupps.length > 0 && (
+                        <div className="ng-med-excluded">
+                          <strong>Excluded from your stack:</strong> {results.excludedSupps.map((k) => SUPPS[k]?.name || k).join(", ")} — removed due to potential medication interactions.
+                        </div>
+                      )}
+                    </div>
                   )}
 
                   <div className="ng-warn">
