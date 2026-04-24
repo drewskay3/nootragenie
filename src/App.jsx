@@ -145,19 +145,22 @@ const ANALYSIS_STEPS = [
   "Summoning your protocol",
 ];
 
+const AMZN_TAG = "nootragenie-20";
+const amzn = (q) => `https://www.amazon.com/s?k=${encodeURIComponent(q)}&tag=${AMZN_TAG}`;
+
 const SUPPS = {
-  lions_mane: { name: "Lion's Mane", detail: "Fruiting Body · Dual Extract", dosage: "500mg", reason: "Stimulates Nerve Growth Factor production for neurogenesis and long-term cognitive resilience. Dual-extracted fruiting body delivers both hericenones and erinacines.", timing: "Morning · with food", onset: "2–4 weeks", priority: "core", cost: "$15–22/mo" },
-  l_theanine: { name: "L-Theanine", detail: "Suntheanine®", dosage: "200mg", sensitiveDose: "100mg", reason: "Promotes alpha brain wave activity for calm, undistracted attention. Pairs beautifully with caffeine to eliminate jitters while keeping you sharp.", timing: "Morning · with caffeine", onset: "30–60 min", priority: "core", cost: "$8–12/mo" },
-  alpha_gpc: { name: "Alpha-GPC", detail: "50% Choline", dosage: "300mg", reason: "The most bioavailable choline source — directly fuels acetylcholine, your brain's key neurotransmitter for memory encoding and sustained focus.", timing: "Morning · with food", onset: "1–2 weeks", priority: "core", cost: "$14–20/mo" },
-  bacopa: { name: "Bacopa Monnieri", detail: "50% Bacosides", dosage: "300mg", reason: "Gold-standard memory nootropic. Clinical studies show measurable improvements in recall speed and accuracy — but it needs 8–12 weeks of consistent use.", timing: "Morning · with fat", onset: "8–12 weeks", priority: "core", cost: "$10–15/mo" },
-  ashwagandha: { name: "Ashwagandha", detail: "KSM-66 Extract", dosage: "300mg", reason: "Clinically shown to reduce cortisol up to 30%. Lowers your stress baseline so your brain can operate without the constant drag of anxiety.", timing: "Evening · with food", onset: "2–4 weeks", priority: "core", cost: "$12–18/mo" },
-  magnesium: { name: "Magnesium", detail: "L-Threonate (Magtein®)", dosage: "2000mg", reason: "The only magnesium form proven to cross the blood-brain barrier. Supports synaptic density, deep sleep, and nervous system calm.", timing: "Evening · before bed", onset: "1–2 weeks", priority: "core", cost: "$15–22/mo" },
-  rhodiola: { name: "Rhodiola Rosea", detail: "3% Rosavins", dosage: "400mg", sensitiveDose: "200mg", reason: "An adaptogen that fights mental fatigue at the cellular level. Supports dopamine metabolism for sustained drive without stimulant crashes.", timing: "Morning · empty stomach", onset: "3–7 days", priority: "core", cost: "$10–14/mo" },
-  omega3: { name: "Omega-3", detail: "High EPA/DHA Fish Oil", dosage: "1500mg", reason: "Structural building blocks for brain cell membranes. Supports neuroplasticity, reduces neuroinflammation, and improves signal transmission between neurons.", timing: "With any meal", onset: "4–8 weeks", priority: "core", cost: "$12–20/mo" },
-  creatine: { name: "Creatine", detail: "Monohydrate", dosage: "5g", reason: "Not just for muscles — creatine is a direct brain energy buffer. Improves working memory and processing speed, especially under stress or sleep debt.", timing: "Any time · with water", onset: "2–4 weeks", priority: "optional", cost: "$5–8/mo" },
-  cdp_choline: { name: "Citicoline", detail: "CDP-Choline", dosage: "250mg", reason: "Supports phosphatidylcholine synthesis and dopamine receptor density. A cleaner, calmer choline source with strong neuroprotective data.", timing: "Morning · with food", onset: "1–2 weeks", priority: "core", cost: "$12–18/mo" },
-  phosphatidylserine: { name: "Phosphatidylserine", detail: "Soy-Free", dosage: "100mg", reason: "Maintains brain cell membrane fluidity. Improves memory, processing speed, and helps moderate your cortisol stress response.", timing: "Morning or evening", onset: "3–4 weeks", priority: "optional", cost: "$14–20/mo" },
-  apigenin: { name: "Apigenin", detail: "Chamomile Extract", dosage: "50mg", reason: "A gentle flavonoid that promotes GABA activity and deep sleep architecture — without morning grogginess. Supports overnight memory consolidation.", timing: "30 min before bed", onset: "Same night", priority: "optional", cost: "$8–12/mo" },
+  lions_mane: { name: "Lion's Mane", detail: "Fruiting Body · Dual Extract", dosage: "500mg", reason: "Stimulates Nerve Growth Factor production for neurogenesis and long-term cognitive resilience. Dual-extracted fruiting body delivers both hericenones and erinacines.", timing: "Morning · with food", onset: "2–4 weeks", priority: "core", cost: "$15–22/mo", buyUrl: amzn("lions mane mushroom supplement fruiting body 500mg") },
+  l_theanine: { name: "L-Theanine", detail: "Suntheanine®", dosage: "200mg", sensitiveDose: "100mg", reason: "Promotes alpha brain wave activity for calm, undistracted attention. Pairs beautifully with caffeine to eliminate jitters while keeping you sharp.", timing: "Morning · with caffeine", onset: "30–60 min", priority: "core", cost: "$8–12/mo", buyUrl: amzn("l-theanine suntheanine 200mg") },
+  alpha_gpc: { name: "Alpha-GPC", detail: "50% Choline", dosage: "300mg", reason: "The most bioavailable choline source — directly fuels acetylcholine, your brain's key neurotransmitter for memory encoding and sustained focus.", timing: "Morning · with food", onset: "1–2 weeks", priority: "core", cost: "$14–20/mo", buyUrl: amzn("alpha gpc 300mg choline supplement") },
+  bacopa: { name: "Bacopa Monnieri", detail: "50% Bacosides", dosage: "300mg", reason: "Gold-standard memory nootropic. Clinical studies show measurable improvements in recall speed and accuracy — but it needs 8–12 weeks of consistent use.", timing: "Morning · with fat", onset: "8–12 weeks", priority: "core", cost: "$10–15/mo", buyUrl: amzn("bacopa monnieri 300mg 50% bacosides") },
+  ashwagandha: { name: "Ashwagandha", detail: "KSM-66 Extract", dosage: "300mg", reason: "Clinically shown to reduce cortisol up to 30%. Lowers your stress baseline so your brain can operate without the constant drag of anxiety.", timing: "Evening · with food", onset: "2–4 weeks", priority: "core", cost: "$12–18/mo", buyUrl: amzn("ashwagandha ksm-66 300mg") },
+  magnesium: { name: "Magnesium", detail: "L-Threonate (Magtein®)", dosage: "2000mg", reason: "The only magnesium form proven to cross the blood-brain barrier. Supports synaptic density, deep sleep, and nervous system calm.", timing: "Evening · before bed", onset: "1–2 weeks", priority: "core", cost: "$15–22/mo", buyUrl: amzn("magnesium l-threonate magtein") },
+  rhodiola: { name: "Rhodiola Rosea", detail: "3% Rosavins", dosage: "400mg", sensitiveDose: "200mg", reason: "An adaptogen that fights mental fatigue at the cellular level. Supports dopamine metabolism for sustained drive without stimulant crashes.", timing: "Morning · empty stomach", onset: "3–7 days", priority: "core", cost: "$10–14/mo", buyUrl: amzn("rhodiola rosea 400mg 3% rosavins") },
+  omega3: { name: "Omega-3", detail: "High EPA/DHA Fish Oil", dosage: "1500mg", reason: "Structural building blocks for brain cell membranes. Supports neuroplasticity, reduces neuroinflammation, and improves signal transmission between neurons.", timing: "With any meal", onset: "4–8 weeks", priority: "core", cost: "$12–20/mo", buyUrl: amzn("omega 3 fish oil high epa dha") },
+  creatine: { name: "Creatine", detail: "Monohydrate", dosage: "5g", reason: "Not just for muscles — creatine is a direct brain energy buffer. Improves working memory and processing speed, especially under stress or sleep debt.", timing: "Any time · with water", onset: "2–4 weeks", priority: "optional", cost: "$5–8/mo", buyUrl: amzn("creatine monohydrate powder") },
+  cdp_choline: { name: "Citicoline", detail: "CDP-Choline", dosage: "250mg", reason: "Supports phosphatidylcholine synthesis and dopamine receptor density. A cleaner, calmer choline source with strong neuroprotective data.", timing: "Morning · with food", onset: "1–2 weeks", priority: "core", cost: "$12–18/mo", buyUrl: amzn("citicoline cdp choline 250mg") },
+  phosphatidylserine: { name: "Phosphatidylserine", detail: "Soy-Free", dosage: "100mg", reason: "Maintains brain cell membrane fluidity. Improves memory, processing speed, and helps moderate your cortisol stress response.", timing: "Morning or evening", onset: "3–4 weeks", priority: "optional", cost: "$14–20/mo", buyUrl: amzn("phosphatidylserine 100mg soy free") },
+  apigenin: { name: "Apigenin", detail: "Chamomile Extract", dosage: "50mg", reason: "A gentle flavonoid that promotes GABA activity and deep sleep architecture — without morning grogginess. Supports overnight memory consolidation.", timing: "30 min before bed", onset: "Same night", priority: "optional", cost: "$8–12/mo", buyUrl: amzn("apigenin 50mg supplement") },
 };
 
 const GOAL_MAP = {
@@ -893,6 +896,28 @@ body {
 
 .ng-meta b { font-weight: 500; color: var(--ink3); }
 
+.ng-buy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  background: linear-gradient(135deg, var(--forest) 0%, var(--forest2) 100%);
+  color: white;
+  text-decoration: none;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 40px;
+  transition: all 0.25s;
+  box-shadow: 0 2px 12px rgba(13,107,63,0.2);
+}
+
+.ng-buy-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(13,107,63,0.3);
+}
+
 .ng-priority-core {
   font-family: 'Azeret Mono', monospace;
   font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
@@ -1346,6 +1371,12 @@ export default function NootraGenie() {
                           {s.priority === "core" ? "◆ Core" : "○ Optional"}
                         </div>
                       </div>
+                      {s.buyUrl && (
+                        <a className="ng-buy-btn" href={s.buyUrl} target="_blank" rel="noopener noreferrer">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                          Buy on Amazon
+                        </a>
+                      )}
                     </div>
                   ))}
 
@@ -1409,6 +1440,7 @@ export default function NootraGenie() {
                   <div className="ng-disclaimer">
                     *These recommendations are for informational purposes only and do not constitute medical advice.
                     Always consult a qualified healthcare provider before starting any supplement regimen.
+                    Product links may be affiliate links — we earn a small commission at no extra cost to you, which helps keep this tool free.
                   </div>
 
                   <div style={{ textAlign: "center" }}>
