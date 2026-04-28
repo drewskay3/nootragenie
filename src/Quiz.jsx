@@ -1230,7 +1230,7 @@ export default function NootraGenie() {
                 Build My Stack
               </button>
               <p className="ng-fine">Free · No signup · Instant results</p>
-              <Link to="/blog" style={{ marginTop: '12px', fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Read our research articles →</Link>
+              <Link to="/blog" style={{ marginTop: '12px', fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Read the blog →</Link>
             </div>
           )}
 

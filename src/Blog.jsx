@@ -394,7 +394,7 @@ export function BlogNav() {
         <span>NootraGenie</span>
       </Link>
       <div className="blog-nav-links">
-        <Link to="/blog">Articles</Link>
+        <Link to="/blog">Blog</Link>
         <Link to="/" className="nav-cta">Take the Quiz</Link>
       </div>
     </nav>
@@ -409,7 +409,7 @@ export function BlogList() {
         <BlogNav />
         <div className="blog-hero">
           <h1>The NootraGenie Guide</h1>
-          <p>Research-backed articles on building your optimal nootropic stack. No hype, no proprietary blend propaganda.</p>
+          <p>Research-backed guides on building your optimal nootropic stack. No hype, no proprietary blend propaganda.</p>
         </div>
         <div className="blog-cards">
           {articles.map((a) => (
@@ -454,7 +454,7 @@ export function ArticlePage({ article }) {
           <BlogNav />
           <div style={{ textAlign: "center", padding: "80px 0" }}>
             <h2 style={{ fontFamily: "'Crimson Pro', serif", fontSize: "28px", marginBottom: "12px" }}>Article not found</h2>
-            <Link to="/blog" style={{ color: "var(--forest)" }}>← Back to articles</Link>
+            <Link to="/blog" style={{ color: "var(--forest)" }}>← Back to blog</Link>
           </div>
         </div>
       </>
@@ -467,7 +467,7 @@ export function ArticlePage({ article }) {
       <div className="article-page">
         <BlogNav />
         <div className="article-header">
-          <Link to="/blog" className="article-back">← Back to articles</Link>
+          <Link to="/blog" className="article-back">← Back to blog</Link>
           <div className="article-meta">
             <span className="article-cat">{article.category}</span>
             <span className="article-date">{article.date}</span>
