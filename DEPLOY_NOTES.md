@@ -1,163 +1,100 @@
-# NootraGenie — Deploy Notes (May 2026 Update — REVISED)
+# NootraGenie — Deploy Notes (Medication Filter Expansion + GA4)
 
-## ⚠️ Read this first — fixing the failed Vercel build
+This update is much smaller than the last one, and the deploy is much simpler now that you have a clean repo with `.gitignore` working.
 
-The previous deploy failed with `Permission denied: vite`. Root cause: your `node_modules` folder was being committed to GitHub when it shouldn't be. When Linux (Vercel's build environment) tried to run a binary that came from a Windows zip, the executable permission was missing.
+## What's new in this update
 
-This zip includes a `.gitignore` file that prevents `node_modules` from being committed. The deploy instructions below are slightly different from before to make sure the broken state in your repo gets cleaned out.
+**1. L-Tyrosine added as a recommended supplement**
+- Now appears in Focus, Energy, and Motivation results
+- Uses your `nootragenie-20` Amazon affiliate tag
 
-**Do these steps exactly. Do not skip the parts about deleting node_modules and .git locally.**
+**2. MAOI medication category added to the quiz**
+- New option in the medications question (Step 09)
+- Triggers a strict exclusion list and prominent prescriber-consult warning
 
----
+**3. Strattera / Atomoxetine added as a separate medication category**
+- Different interaction profile from stimulants (norepinephrine reuptake inhibitor)
+- Tyrosine flagged as a warning, not an exclusion (with detailed clinical reasoning in the warning text)
 
-## What's in this zip
+**4. ADHD stimulants now properly exclude L-Tyrosine**
+- Previously stimulants only had warnings — now Tyrosine is excluded outright
+- This was the central safety claim in the new ADHD article; now it's actually enforced
 
-- `.gitignore` (NEW) — prevents `node_modules`, build output, env files, and OS junk from ever being committed
-- New article #5: "Best Nootropic Stack for ADHD Without Prescription Stimulants"
-- `public/sitemap.xml`
-- `public/robots.txt`
-- Google Search Console verification placeholder in `index.html`
-- `og:url` meta tag in `index.html`
+**5. Tightened SSRI/SNRI warnings**
+- Tyrosine added with specific SNRI (Effexor, Cymbalta) language
+- Note text strengthened
 
----
+**6. New "Talk to your prescriber first" alert**
+- Appears prominently above the supplement recommendations when someone selects MAOIs, ADHD stimulants, blood thinners, or immunosuppressants
+- Red border, larger font — meaningfully louder than the existing safety alert blocks
 
-## Step 1 — Clean your local folder completely
+**7. Google Analytics 4 wired in**
+- Your Measurement ID `G-017663XE6D` is now active site-wide
+- You'll start seeing real-time data in GA4 within ~5 minutes of the deploy
+- All page views (including blog articles) will track automatically
 
-In Windows Explorer, navigate to `C:\Users\drewj\OneDrive\Desktop\nootragenie`.
+## Deploy steps (simplified — your repo is already clean)
 
-Delete EVERYTHING inside that folder, including:
-- The `node_modules` folder (if it exists)
-- The `.git` folder (you may need to enable "Show hidden items" under the View tab to see it)
-- All other files and folders
-
-The `nootragenie` folder itself should now be empty.
-
----
-
-## Step 2 — Extract this zip into the empty folder
-
-Extract the contents of this zip directly into `C:\Users\drewj\OneDrive\Desktop\nootragenie`. You should NOT end up with a nested folder like `nootragenie\nootragenie\...` — the contents of the zip (the `src` folder, `package.json`, `.gitignore`, etc.) should be at the top level of `nootragenie`.
-
-Quick check after extracting — open the folder and confirm you see:
-- A `src` folder
-- A `public` folder
-- A `package.json` file
-- A `.gitignore` file (it might be hidden — enable "Show hidden items" in Explorer's View tab)
-- An `index.html` file
-- `DEPLOY_NOTES.md`
-
-If `.gitignore` is missing, the deploy will fail again. Tell me before proceeding.
-
----
-
-## Step 3 — Run the deploy in PowerShell
-
-Open PowerShell, then:
-
-```
+```powershell
 cd C:\Users\drewj\OneDrive\Desktop\nootragenie
 npm install
-git init
 git add .
-git commit -m "Add ADHD article + SEO infra + gitignore (fixes Vercel build)"
-git remote add origin https://github.com/drewskay3/nootragenie.git
-git branch -M main
-git push -u origin main --force
+git commit -m "Expand medication filter: Tyrosine, MAOIs, Strattera, prescriber consult; add GA4"
+git push
 ```
 
-**After `git add .` runs, but BEFORE the commit**, run this one extra command:
+That's it. No `git init`, no `--force`, no remote setup — those were one-time steps for the initial clean rebuild. From now on, your normal workflow is: extract zip over folder → `git add` → `git commit` → `git push`.
 
-```
-git status
-```
+If `git add .` shows `node_modules` being staged for any reason, STOP and tell me. With the `.gitignore` in place from the last update, this should never happen.
 
-You should see a list of files being added. Look for `node_modules` in that list.
-- If `node_modules` is NOT in the list → good, proceed with `git commit`
-- If `node_modules` IS in the list → STOP. The `.gitignore` isn't being respected. Tell me before pushing.
+## After deploy — confirm in incognito
 
----
+1. Open https://nootragenie.com in an incognito window
+2. Take the quiz, pick "Deep Focus" as your primary goal
+3. On the medications question, select "ADHD Stimulants"
+4. Submit and confirm:
+   - The red "Talk to your prescriber" alert appears above your stack
+   - L-Tyrosine is NOT in your recommended stack (excluded due to stimulant interaction)
+   - The Medication Interactions section at the bottom shows the stimulant note
 
-## Step 4 — Watch the Vercel build
+5. Try again with "MAOIs" selected — you should see the strictest exclusion list (Tyrosine, Rhodiola, Ashwagandha, Bacopa all excluded) and the prescriber alert.
 
-Go to https://vercel.com → your nootragenie project → Deployments. The newest deployment should appear within ~30 seconds of your push. Watch it. It should:
+6. Try a third run with no medications selected and "Deep Focus" — L-Tyrosine should now appear in your stack as a core recommendation.
 
-1. Show "Building" with a yellow icon
-2. Take 30–60 seconds
-3. Show "Ready" with a green checkmark
+## After deploy — confirm GA4 is tracking
 
-If it fails again, screenshot the build log and send it. Don't make any other changes.
+1. Visit https://nootragenie.com in any browser (your normal one is fine)
+2. Go to https://analytics.google.com → your NootraGenie property
+3. Left sidebar → **Reports** → **Realtime**
+4. You should see "1 user in the last 30 minutes" — that's you
+5. Click around the site (homepage, blog, an article) and watch the real-time view update
 
----
+If you don't see yourself in real-time after 5 minutes:
+- Make sure you're not running an ad blocker (uBlock Origin and similar will block GA4)
+- Try opening an incognito window and visiting the site
+- Confirm the script is loading by viewing source on your homepage and looking for `G-017663XE6D`
 
-## Step 5 — Confirm the new article is live
+## Bug-finding sanity check
 
-After the green checkmark:
+If you see L-Tyrosine showing up in someone's stack alongside ADHD stimulants in the live site, that means the build cached something stale. Clear your browser cache / hard refresh and retest.
 
-1. Open an **incognito/private browser window** (very important — your normal browser may have the old version cached)
-2. Visit https://nootragenie.com/blog
-3. Confirm 5 articles appear, with the ADHD article at the bottom
-4. Visit https://nootragenie.com/blog/best-nootropic-stack-for-adhd-without-stimulants directly to confirm it loads
-5. Visit https://nootragenie.com/sitemap.xml — should display XML, not 404
-6. Visit https://nootragenie.com/robots.txt — should display the robots rules, not 404
+## What did NOT change in this update
 
-If all 4 of those work, you're back in business.
+- No changes to `articles.js` (no new blog post — that comes next session)
+- No changes to `Blog.jsx`, `App.jsx`, `main.jsx`
+- No changes to `api/subscribe.js` or environment variables
+- No changes to `vercel.json`, `vite.config.js`, or `package.json`
+- The GSC verification placeholder is still `REPLACE_WITH_GSC_CODE` in `index.html` — replace it whenever you finish the GSC setup, then push the change as a one-line commit.
 
----
+## What's queued for next session
 
-## Step 6 — Google Search Console (do this AFTER Step 5 succeeds)
+When you're ready, prioritize ONE of:
 
-1. Go to https://search.google.com/search-console
-2. Click "Add Property" → choose **URL prefix** (not Domain) → enter `https://nootragenie.com`
-3. Choose **HTML tag** verification method
-4. Google shows you a meta tag like `<meta name="google-site-verification" content="abc123xyz..." />`
-5. Copy ONLY the value inside `content="..."`
-6. Open `index.html` in your local nootragenie folder
-7. Find the line `<meta name="google-site-verification" content="REPLACE_WITH_GSC_CODE" />`
-8. Replace `REPLACE_WITH_GSC_CODE` with the value you copied
-9. Save the file
-10. Push the change with PowerShell:
-    ```
-    cd C:\Users\drewj\OneDrive\Desktop\nootragenie
-    git add index.html
-    git commit -m "Add GSC verification code"
-    git push
-    ```
-    Note: no `--force` and no `init` this time — those are only for the first push or for replacing the whole repo.
-11. Wait for Vercel to deploy (~1 min)
-12. Back in GSC, click **Verify**
+1. **Article #6** — strong candidates by SEO opportunity:
+   - "Best Nootropics for Anxiety Without Benzodiazepines" (mirrors the ADHD article's structure, taps the GABA-stack market)
+   - "Caffeine + L-Theanine: The Beginner's Nootropic Stack" (low-difficulty, very high search volume, easy Amazon links)
+   - "Nootropics and SSRIs: What's Safe and What's Not" (uses your medication filter as the moat)
 
----
+2. **Reddit account warming progress check** — bring me the URLs of comments you've posted so I can give you feedback on positioning before you start mentioning the site
 
-## Step 7 — Submit sitemap and request indexing
-
-Once GSC is verified:
-
-1. Left sidebar → **Sitemaps** → enter `sitemap.xml` → Submit
-2. Top search bar → paste each article URL → click "Request Indexing" for each one
-   - https://nootragenie.com/blog/best-nootropic-stack-for-focus
-   - https://nootragenie.com/blog/beginner-nootropic-stack-under-30
-   - https://nootragenie.com/blog/lions-mane-vs-alpha-gpc-which-do-you-need
-   - https://nootragenie.com/blog/what-are-nootropics-beginners-guide
-   - https://nootragenie.com/blog/best-nootropic-stack-for-adhd-without-stimulants
-
----
-
-## Why the previous deploy failed (in plain English)
-
-When you zipped your nootragenie folder on Windows, the zip included `node_modules` — a folder that holds 50MB of dependencies. That folder shouldn't ever be in version control because (a) it's huge, (b) it's regenerated automatically by `npm install`, and (c) Linux and Windows store executable permissions differently, so files that came from a Windows zip don't run on Linux.
-
-When Vercel cloned your repo, it found the broken `node_modules` from your push, tried to run `vite` from inside it, and failed with "Permission denied."
-
-The new `.gitignore` file tells git to ignore `node_modules` (and a few other things you'd never want committed, like `.env` files with API keys). With the gitignore in place, your push will only contain your actual source code — Vercel will run `npm install` itself and produce a fresh, correctly-permissioned `node_modules` on its end.
-
-This is also why I'm having you delete the old `.git` folder before this push: the previous commits had `node_modules` baked into the git history, and we want a clean start.
-
----
-
-## What to do if Step 3's `git status` check shows node_modules
-
-This would mean the `.gitignore` file didn't get extracted properly (sometimes Windows hides files starting with a dot). Fix:
-
-1. In PowerShell, while in the nootragenie folder, run: `dir -Force` and look for `.gitignore`
-2. If it's missing, the zip extraction skipped it. Tell me and I'll send a different format.
-3. If it's present but git is still tracking node_modules, run `git rm -r --cached node_modules` then redo the commit.
+3. **Beehiiv sequence audit** — paste me the current state of your welcome sequence emails (subject lines + first 3 lines of each), I'll suggest tightening on conversion-driving copy

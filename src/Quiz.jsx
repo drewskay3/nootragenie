@@ -118,9 +118,11 @@ const QUESTIONS = [
     multi: true,
     options: [
       { value: "ssri", label: "SSRIs / SNRIs", desc: "Zoloft, Lexapro, Prozac, Effexor, etc." },
+      { value: "maoi", label: "MAOIs", desc: "Nardil, Parnate, Marplan, Emsam, selegiline" },
       { value: "blood_thinners", label: "Blood Thinners", desc: "Warfarin, Eliquis, Xarelto, aspirin therapy" },
       { value: "blood_pressure", label: "Blood Pressure Meds", desc: "Lisinopril, Amlodipine, Metoprolol, etc." },
       { value: "stimulants", label: "ADHD Stimulants", desc: "Adderall, Vyvanse, Ritalin, Concerta" },
+      { value: "strattera", label: "Strattera / Atomoxetine", desc: "Non-stimulant ADHD medication" },
       { value: "thyroid", label: "Thyroid Medication", desc: "Levothyroxine, Synthroid, Armour" },
       { value: "benzos", label: "Benzodiazepines", desc: "Xanax, Ativan, Klonopin, Valium" },
       { value: "immunosuppressants", label: "Immunosuppressants", desc: "Post-transplant, autoimmune treatments" },
@@ -157,6 +159,7 @@ const SUPPS = {
   ashwagandha: { name: "Ashwagandha", detail: "KSM-66 Extract", dosage: "300mg", reason: "Clinically shown to reduce cortisol up to 30%. Lowers your stress baseline so your brain can operate without the constant drag of anxiety.", timing: "Evening · with food", onset: "2–4 weeks", priority: "core", cost: "$12–18/mo", buyUrl: amzn("ashwagandha ksm-66 300mg") },
   magnesium: { name: "Magnesium", detail: "L-Threonate (Magtein®)", dosage: "2000mg", reason: "The only magnesium form proven to cross the blood-brain barrier. Supports synaptic density, deep sleep, and nervous system calm.", timing: "Evening · before bed", onset: "1–2 weeks", priority: "core", cost: "$15–22/mo", buyUrl: amzn("magnesium l-threonate magtein") },
   rhodiola: { name: "Rhodiola Rosea", detail: "3% Rosavins", dosage: "400mg", sensitiveDose: "200mg", reason: "An adaptogen that fights mental fatigue at the cellular level. Supports dopamine metabolism for sustained drive without stimulant crashes.", timing: "Morning · empty stomach", onset: "3–7 days", priority: "core", cost: "$10–14/mo", buyUrl: amzn("rhodiola rosea 400mg 3% rosavins") },
+  tyrosine: { name: "L-Tyrosine", detail: "Free-Form Amino Acid", dosage: "1000mg", sensitiveDose: "500mg", reason: "Direct precursor to dopamine and norepinephrine. Supports sustained attention and stress tolerance under cognitive load — especially when sleep is short or pressure is high.", timing: "Morning · empty stomach", onset: "30–60 min", priority: "core", cost: "$8–14/mo", buyUrl: amzn("l-tyrosine 500mg capsules") },
   omega3: { name: "Omega-3", detail: "High EPA/DHA Fish Oil", dosage: "1500mg", reason: "Structural building blocks for brain cell membranes. Supports neuroplasticity, reduces neuroinflammation, and improves signal transmission between neurons.", timing: "With any meal", onset: "4–8 weeks", priority: "core", cost: "$12–20/mo", buyUrl: amzn("omega 3 fish oil high epa dha") },
   creatine: { name: "Creatine", detail: "Monohydrate", dosage: "5g", reason: "Not just for muscles — creatine is a direct brain energy buffer. Improves working memory and processing speed, especially under stress or sleep debt.", timing: "Any time · with water", onset: "2–4 weeks", priority: "optional", cost: "$5–8/mo", buyUrl: amzn("creatine monohydrate powder") },
   cdp_choline: { name: "Citicoline", detail: "CDP-Choline", dosage: "250mg", reason: "Supports phosphatidylcholine synthesis and dopamine receptor density. A cleaner, calmer choline source with strong neuroprotective data.", timing: "Morning · with food", onset: "1–2 weeks", priority: "core", cost: "$12–18/mo", buyUrl: amzn("citicoline cdp choline 250mg") },
@@ -165,17 +168,17 @@ const SUPPS = {
 };
 
 const GOAL_MAP = {
-  focus: ["l_theanine", "alpha_gpc", "lions_mane", "rhodiola", "creatine", "cdp_choline"],
+  focus: ["l_theanine", "alpha_gpc", "lions_mane", "rhodiola", "tyrosine", "creatine", "cdp_choline"],
   memory: ["bacopa", "alpha_gpc", "lions_mane", "omega3", "phosphatidylserine", "cdp_choline"],
   anxiety: ["ashwagandha", "l_theanine", "magnesium", "omega3", "phosphatidylserine", "bacopa"],
-  energy: ["rhodiola", "creatine", "alpha_gpc", "lions_mane", "omega3", "l_theanine"],
+  energy: ["rhodiola", "tyrosine", "creatine", "alpha_gpc", "lions_mane", "omega3", "l_theanine"],
   creativity: ["lions_mane", "l_theanine", "omega3", "bacopa", "rhodiola", "cdp_choline"],
   sleep: ["magnesium", "apigenin", "ashwagandha", "l_theanine", "phosphatidylserine", "omega3"],
 };
 
 const SECONDARY_MAP = {
   mood: ["ashwagandha", "omega3", "rhodiola"],
-  motivation: ["rhodiola", "alpha_gpc", "creatine"],
+  motivation: ["rhodiola", "tyrosine", "alpha_gpc", "creatine"],
   verbal: ["alpha_gpc", "cdp_choline", "bacopa"],
   stress: ["ashwagandha", "l_theanine", "magnesium"],
   neuroprotection: ["lions_mane", "omega3", "phosphatidylserine"],
@@ -203,17 +206,29 @@ const GOAL_SUMMARIES = {
 // Medication interaction map: medication -> { exclude: [...], warn: [...] }
 // exclude = do not recommend at all
 // warn = can recommend but must flag with specific warning
+// requirePrescriberConsult = true means show prominent "talk to your doctor first" badge in results
 const MED_INTERACTIONS = {
   ssri: {
     exclude: ["rhodiola"],
     warn: {
+      tyrosine: "L-Tyrosine increases dopamine and norepinephrine synthesis. With SNRIs (Effexor, Cymbalta), this can amplify noradrenergic activity. Discuss with your prescriber before starting and monitor for increased anxiety or blood pressure changes.",
       ashwagandha: "Ashwagandha may amplify serotonergic effects when combined with SSRIs/SNRIs. Use only under medical supervision and start at half dose.",
       l_theanine: "L-Theanine is generally considered safe with SSRIs but may enhance sedation. Monitor how you feel and discuss with your prescriber.",
       omega3: "High-dose Omega-3 may have mild serotonergic activity. Generally safe with SSRIs but mention to your doctor.",
     },
-    note: "You're taking SSRIs/SNRIs. We've excluded Rhodiola (risk of serotonin syndrome) and flagged supplements that may interact with serotonergic medications."
+    note: "You're on SSRIs/SNRIs. We've excluded Rhodiola due to documented serotonin syndrome risk and flagged supplements that affect serotonergic or noradrenergic pathways. Do not add anything new without your prescriber's input."
+  },
+  maoi: {
+    requirePrescriberConsult: true,
+    exclude: ["rhodiola", "tyrosine", "ashwagandha", "bacopa"],
+    warn: {
+      l_theanine: "L-Theanine is generally low-risk with MAOIs but should still be cleared with your prescriber before starting.",
+      omega3: "Omega-3 is typically compatible with MAOIs but mention all supplements to your prescribing doctor.",
+    },
+    note: "MAOIs have severe, potentially life-threatening interactions with many supplements that affect monoamine neurotransmitters. We've excluded all dopaminergic and serotonergic compounds (Tyrosine, Rhodiola, Ashwagandha, Bacopa). DO NOT start any new supplement — including ones we recommend — without your prescribing physician's explicit approval. Tyramine-rich foods and certain supplements can trigger hypertensive crisis."
   },
   blood_thinners: {
+    requirePrescriberConsult: true,
     exclude: ["omega3", "lions_mane"],
     warn: {
       ashwagandha: "Limited evidence suggests Ashwagandha may have mild antiplatelet effects. Discuss with your prescriber before adding this.",
@@ -223,28 +238,40 @@ const MED_INTERACTIONS = {
   blood_pressure: {
     exclude: [],
     warn: {
+      tyrosine: "L-Tyrosine can transiently raise blood pressure via increased catecholamine synthesis. Monitor your BP after starting and discuss with your prescriber, especially if your medication is for hypertension rather than another cardiovascular condition.",
       ashwagandha: "Ashwagandha may lower blood pressure. Combined with BP medication this could cause hypotension. Monitor carefully and start at half dose.",
       magnesium: "Magnesium can lower blood pressure. Combined with BP medication, monitor for dizziness or lightheadedness. Start low.",
       rhodiola: "Rhodiola may affect blood pressure regulation. Use cautiously alongside BP medications.",
     },
-    note: "You're taking blood pressure medication. Several nootropics can affect BP — we've flagged ones that need monitoring. Check with your prescriber before starting."
+    note: "You're on blood pressure medication. Several nootropics can affect BP — we've flagged ones that need monitoring. Check with your prescriber before starting anything new."
   },
   stimulants: {
-    exclude: [],
+    requirePrescriberConsult: true,
+    exclude: ["tyrosine"],
     warn: {
       alpha_gpc: "Alpha-GPC increases acetylcholine, which may amplify stimulant side effects like jitteriness or anxiety. Start at half dose and assess tolerance.",
       cdp_choline: "Citicoline increases acetylcholine and dopamine receptor density. May intensify ADHD medication effects. Start low.",
       rhodiola: "Rhodiola supports dopamine metabolism. May feel overstimulating combined with ADHD stimulants. Use on off-days or at reduced dose.",
     },
-    note: "You're taking ADHD stimulants. We've flagged supplements that affect dopamine and acetylcholine pathways to avoid overstimulation. Start any new supplement on a day you're NOT taking your stimulant to gauge effects separately."
+    note: "You're on ADHD stimulants. We've excluded L-Tyrosine (stacks with the same dopaminergic and noradrenergic pathways your medication targets — the combination can amplify side effects including elevated heart rate, anxiety, and blood pressure) and flagged choline sources and Rhodiola for cautious dosing. Start any new supplement on a day you're NOT taking your stimulant to gauge effects independently."
+  },
+  strattera: {
+    exclude: [],
+    warn: {
+      tyrosine: "Strattera (atomoxetine) selectively inhibits norepinephrine reuptake. L-Tyrosine increases norepinephrine synthesis. Combining can amplify noradrenergic effects including elevated heart rate and blood pressure. Discuss with your prescriber and monitor closely if approved.",
+      rhodiola: "Rhodiola affects monoamine metabolism. Combined with atomoxetine, monitor for amplified noradrenergic effects.",
+      alpha_gpc: "Alpha-GPC's cholinergic effects are generally compatible with Strattera but start at a reduced dose to assess tolerance.",
+    },
+    note: "You're on Strattera (atomoxetine). Unlike stimulants, Strattera works through norepinephrine — we've flagged supplements that affect the same pathway. Most are usable with monitoring, but discuss any addition with your prescriber."
   },
   thyroid: {
     exclude: ["ashwagandha"],
     warn: {
+      tyrosine: "L-Tyrosine is a precursor to thyroid hormone. With thyroid medication this can affect dosing — your medication is calibrated to your current production. Take Tyrosine at least 4 hours apart from your thyroid medication and discuss with your endocrinologist before starting.",
       magnesium: "Take Magnesium at least 4 hours apart from thyroid medication — it can reduce absorption of levothyroxine.",
       omega3: "Take Omega-3 at least 4 hours apart from thyroid medication to avoid absorption interference.",
     },
-    note: "You're on thyroid medication. We've excluded Ashwagandha (directly affects thyroid hormone levels and can destabilize your dosing). Take any supplements at least 4 hours apart from your thyroid medication."
+    note: "You're on thyroid medication. We've excluded Ashwagandha (directly affects thyroid hormone levels and can destabilize your dosing). Take any supplements at least 4 hours apart from your thyroid medication, and discuss Tyrosine specifically with your endocrinologist before starting."
   },
   benzos: {
     exclude: ["ashwagandha", "apigenin"],
@@ -252,9 +279,10 @@ const MED_INTERACTIONS = {
       magnesium: "Magnesium enhances GABA activity and may amplify benzodiazepine sedation. Use with caution and discuss with your prescriber.",
       l_theanine: "L-Theanine promotes relaxation via GABA pathways. May increase sedation when combined with benzodiazepines. Start at half dose.",
     },
-    note: "You're taking benzodiazepines. We've excluded supplements with strong GABAergic effects (Ashwagandha, Apigenin) to avoid excessive sedation. Be cautious with anything that promotes relaxation."
+    note: "You're on benzodiazepines. We've excluded supplements with strong GABAergic effects (Ashwagandha, Apigenin) to avoid excessive sedation. Be cautious with anything that promotes relaxation."
   },
   immunosuppressants: {
+    requirePrescriberConsult: true,
     exclude: ["lions_mane", "ashwagandha"],
     warn: {
       omega3: "High-dose Omega-3 may modulate immune function. Discuss with your transplant team or immunologist before adding.",
@@ -286,6 +314,7 @@ function buildStack(answers) {
   const excluded = new Set();
   const suppWarnings = {};
   const medNotes = [];
+  let requirePrescriberConsult = false;
 
   if (hasMeds) {
     medications.forEach((med) => {
@@ -297,6 +326,7 @@ function buildStack(answers) {
         suppWarnings[supp].push(warning);
       });
       medNotes.push(interactions.note);
+      if (interactions.requirePrescriberConsult) requirePrescriberConsult = true;
     });
   }
 
@@ -349,6 +379,7 @@ function buildStack(answers) {
     warnings,
     medNotes: hasMeds ? medNotes : [],
     excludedSupps: hasMeds ? [...excluded] : [],
+    requirePrescriberConsult,
   };
 }
 
@@ -971,6 +1002,32 @@ body {
   margin-top: 20px;
 }
 
+.ng-prescriber-alert {
+  background: rgba(220,107,90,0.10);
+  border: 2px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 22px 26px;
+  margin: 24px 0;
+  box-shadow: 0 4px 16px rgba(220,107,90,0.10);
+}
+
+.ng-prescriber-alert-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--danger);
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
+.ng-prescriber-alert p {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink2);
+  line-height: 1.65;
+  margin: 0;
+}
+
 .ng-med-alert {
   background: rgba(220,107,90,0.08);
   border: 1px solid rgba(220,107,90,0.15);
@@ -1349,6 +1406,13 @@ export default function NootraGenie() {
                       <div className="ng-notes-disclaimer">
                         For medical conditions or medications mentioned, always verify with your healthcare provider.
                       </div>
+                    </div>
+                  )}
+
+                  {results.requirePrescriberConsult && (
+                    <div className="ng-prescriber-alert">
+                      <div className="ng-prescriber-alert-title">Talk to your prescriber before starting any of this</div>
+                      <p>Based on what you told us, you're on a medication category with serious supplement interactions. The recommendations below are filtered for your situation, but they are not a substitute for a conversation with your prescriber. Bring this protocol to your next appointment — do not start anything new on your own.</p>
                     </div>
                   )}
 
