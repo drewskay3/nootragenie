@@ -1,100 +1,75 @@
-# NootraGenie — Deploy Notes (Medication Filter Expansion + GA4)
-
-This update is much smaller than the last one, and the deploy is much simpler now that you have a clean repo with `.gitignore` working.
+# NootraGenie — Deploy Notes (Article #6 + Newest-First Ordering)
 
 ## What's new in this update
 
-**1. L-Tyrosine added as a recommended supplement**
-- Now appears in Focus, Energy, and Motivation results
-- Uses your `nootragenie-20` Amazon affiliate tag
+**1. Article #6 added: "Best Nootropics for Anxiety Without Benzodiazepines"**
+- ~2,000 words, 7 sections, sympathetic editorial frame
+- Recommends KSM-66 Ashwagandha, Suntheanine L-Theanine, Magtein Magnesium L-Threonate as core stack
+- Supporting compounds: Apigenin, Bacognize Bacopa, Affron Saffron
+- 6 Amazon affiliate links via your `nootragenie-20` tag
+- Dedicated medication interactions section covering benzos, SSRIs, MAOIs, BP meds, thyroid
+- Closing CTA leans on the medication interaction filter
 
-**2. MAOI medication category added to the quiz**
-- New option in the medications question (Step 09)
-- Triggers a strict exclusion list and prominent prescriber-consult warning
+**2. Blog post order reversed — newest first**
+- Display order is now: Anxiety → ADHD → Beginners Guide → Lion's Mane → Beginner Stack → Focus Stack
+- Going forward, every new article should be inserted at the TOP of the `articles` array in `src/articles.js`, not appended at the bottom
+- No code changes to `Blog.jsx` were needed — the blog renders articles in array order
 
-**3. Strattera / Atomoxetine added as a separate medication category**
-- Different interaction profile from stimulants (norepinephrine reuptake inhibitor)
-- Tyrosine flagged as a warning, not an exclusion (with detailed clinical reasoning in the warning text)
+**3. Sitemap updated with new article URL**
 
-**4. ADHD stimulants now properly exclude L-Tyrosine**
-- Previously stimulants only had warnings — now Tyrosine is excluded outright
-- This was the central safety claim in the new ADHD article; now it's actually enforced
-
-**5. Tightened SSRI/SNRI warnings**
-- Tyrosine added with specific SNRI (Effexor, Cymbalta) language
-- Note text strengthened
-
-**6. New "Talk to your prescriber first" alert**
-- Appears prominently above the supplement recommendations when someone selects MAOIs, ADHD stimulants, blood thinners, or immunosuppressants
-- Red border, larger font — meaningfully louder than the existing safety alert blocks
-
-**7. Google Analytics 4 wired in**
-- Your Measurement ID `G-017663XE6D` is now active site-wide
-- You'll start seeing real-time data in GA4 within ~5 minutes of the deploy
-- All page views (including blog articles) will track automatically
-
-## Deploy steps (simplified — your repo is already clean)
+## Deploy steps
 
 ```powershell
 cd C:\Users\drewj\OneDrive\Desktop\nootragenie
-npm install
+git status
+```
+
+Confirm modified files include `src/articles.js`, `public/sitemap.xml`, `DEPLOY_NOTES.md`. If `git status` says "nothing to commit," the zip extraction didn't replace your files — tell me before continuing.
+
+```powershell
 git add .
-git commit -m "Expand medication filter: Tyrosine, MAOIs, Strattera, prescriber consult; add GA4"
+git commit -m "Add article #6 (anxiety without benzos) + reorder newest-first"
 git push
 ```
 
-That's it. No `git init`, no `--force`, no remote setup — those were one-time steps for the initial clean rebuild. From now on, your normal workflow is: extract zip over folder → `git add` → `git commit` → `git push`.
+Wait 1–2 min for Vercel to build green.
 
-If `git add .` shows `node_modules` being staged for any reason, STOP and tell me. With the `.gitignore` in place from the last update, this should never happen.
+## Verification after deploy
 
-## After deploy — confirm in incognito
+1. Open https://nootragenie.com/blog in incognito
+2. Top article should be "Best Nootropics for Anxiety Without Benzodiazepines"
+3. Click into it — confirm all 7 sections render, Amazon links work, the prescriber CTA at the bottom links to the quiz
+4. Confirm overall article order matches: Anxiety → ADHD → Beginners Guide → Lion's Mane → Beginner Stack → Focus Stack
 
-1. Open https://nootragenie.com in an incognito window
-2. Take the quiz, pick "Deep Focus" as your primary goal
-3. On the medications question, select "ADHD Stimulants"
-4. Submit and confirm:
-   - The red "Talk to your prescriber" alert appears above your stack
-   - L-Tyrosine is NOT in your recommended stack (excluded due to stimulant interaction)
-   - The Medication Interactions section at the bottom shows the stimulant note
+## Post-deploy SEO step (don't skip)
 
-5. Try again with "MAOIs" selected — you should see the strictest exclusion list (Tyrosine, Rhodiola, Ashwagandha, Bacopa all excluded) and the prescriber alert.
+In Google Search Console:
 
-6. Try a third run with no medications selected and "Deep Focus" — L-Tyrosine should now appear in your stack as a core recommendation.
+1. Top URL bar → paste `https://nootragenie.com/blog/best-nootropics-for-anxiety-without-benzodiazepines`
+2. Press Enter
+3. Click **Request Indexing**
+4. Wait ~30s for confirmation
 
-## After deploy — confirm GA4 is tracking
+Then re-submit your sitemap to refresh Google's view:
 
-1. Visit https://nootragenie.com in any browser (your normal one is fine)
-2. Go to https://analytics.google.com → your NootraGenie property
-3. Left sidebar → **Reports** → **Realtime**
-4. You should see "1 user in the last 30 minutes" — that's you
-5. Click around the site (homepage, blog, an article) and watch the real-time view update
+1. Left sidebar → **Sitemaps**
+2. The existing `sitemap.xml` entry is already there — Google will recrawl it on its own schedule
+3. Optionally click the three dots → **Resubmit sitemap** to nudge it sooner
 
-If you don't see yourself in real-time after 5 minutes:
-- Make sure you're not running an ad blocker (uBlock Origin and similar will block GA4)
-- Try opening an incognito window and visiting the site
-- Confirm the script is loading by viewing source on your homepage and looking for `G-017663XE6D`
+## Build verification
 
-## Bug-finding sanity check
-
-If you see L-Tyrosine showing up in someone's stack alongside ADHD stimulants in the live site, that means the build cached something stale. Clear your browser cache / hard refresh and retest.
-
-## What did NOT change in this update
-
-- No changes to `articles.js` (no new blog post — that comes next session)
-- No changes to `Blog.jsx`, `App.jsx`, `main.jsx`
-- No changes to `api/subscribe.js` or environment variables
-- No changes to `vercel.json`, `vite.config.js`, or `package.json`
-- The GSC verification placeholder is still `REPLACE_WITH_GSC_CODE` in `index.html` — replace it whenever you finish the GSC setup, then push the change as a one-line commit.
+This zip was tested with a real Vite production build before packaging. 36 modules transformed cleanly, zero errors, zero warnings. If you see a build failure on Vercel, the cause is environment-specific (cache, npm version, etc.) — screenshot the build log and send it.
 
 ## What's queued for next session
 
-When you're ready, prioritize ONE of:
+You now have 6 articles published, GA4 tracking, GSC verified, sitemap submitted, and the medication interaction filter genuinely backing up the safety claims in the ADHD and anxiety articles. The technical foundation is fully in place. From here, the work is content + Reddit + email.
 
-1. **Article #6** — strong candidates by SEO opportunity:
-   - "Best Nootropics for Anxiety Without Benzodiazepines" (mirrors the ADHD article's structure, taps the GABA-stack market)
-   - "Caffeine + L-Theanine: The Beginner's Nootropic Stack" (low-difficulty, very high search volume, easy Amazon links)
-   - "Nootropics and SSRIs: What's Safe and What's Not" (uses your medication filter as the moat)
+Pick one of these for next session:
 
-2. **Reddit account warming progress check** — bring me the URLs of comments you've posted so I can give you feedback on positioning before you start mentioning the site
+1. **Article #7** — strong candidates: "Caffeine + L-Theanine: The Beginner's Stack" (high search volume, easy buyer intent), "Nootropics and SSRIs: What's Safe and What's Not" (uses your filter as the moat), or "How to Stack Nootropics: A 4-Week Onboarding Guide" (works as a top-of-funnel introduction)
 
-3. **Beehiiv sequence audit** — paste me the current state of your welcome sequence emails (subject lines + first 3 lines of each), I'll suggest tightening on conversion-driving copy
+2. **Reddit warming** — your account is aged enough to start. We left off needing to find your first thread to answer. Bring me a thread URL when you're ready.
+
+3. **Beehiiv welcome sequence audit** — paste the current state of your 5 emails and I'll suggest tightening for affiliate conversion
+
+4. **Share mechanic for results** — quiz takers can share their personalized stack via a link. Real conversion lift potential once you have any meaningful traffic.
