@@ -271,6 +271,67 @@ const articles = [
         cta: true
       }
     ]
+  },
+  {
+    slug: "caffeine-and-l-theanine-beginners-guide",
+    title: "Caffeine and L-Theanine: The Beginner's Guide to the Perfect Focus Stack",
+    description: "The most-studied, lowest-risk nootropic combination in existence — under $15/month and works for almost everyone. Here's the science, the right dosage ratio, and how to start using it correctly.",
+    date: "May 2026",
+    readTime: "6 min read",
+    category: "Beginners",
+    heroEmoji: "△",
+    sections: [
+      {
+        heading: "If You Only Try One Nootropic Stack, Make It This One",
+        content: `Caffeine and L-Theanine is the most-studied, most-recommended, lowest-risk combination in the entire nootropics space. It's cheap (under $15/month for both), it's available at any drugstore, and the research behind it is actually solid — not the "one rat study" kind of evidence most supplements lean on, but dozens of human trials.\n\nIf you've never tried a nootropic before, this is where to start. If you've been overwhelmed by stacks with 12 ingredients and a $90/month price tag, this is your reset button. And if you've been skeptical of the whole nootropics category, this is the combination most likely to change your mind — because the effect is real, predictable, and consistent across most healthy adults.\n\nHere's everything you need to know to start using it correctly.`
+      },
+      {
+        heading: "Why This Stack Works",
+        content: `Caffeine alone is fine. Most adults already use it. But anyone who's had three cups of coffee knows the problem: focus comes with jitters, anxiety, and a 3pm crash that makes you useless.\n\nL-Theanine fixes all three.\n\nL-Theanine is an amino acid found naturally in tea leaves (especially green tea). It promotes a state called "alert relaxation" — your brain produces more alpha waves, the same pattern you see in experienced meditators. It doesn't sedate you. It doesn't make you sleepy. It just takes the edge off the stimulation without taking away the focus.\n\nHere's what each one does on its own and what happens when you combine them:\n\n**Caffeine alone:** Alert, but jittery. Focused, but anxious. Energetic, but crashy.\n\n**L-Theanine alone:** Calm, but slightly underwhelming. Most people don't feel much from L-Theanine by itself.\n\n**Caffeine + L-Theanine together:** Sharp focus, calm mind, no jitters, no crash.\n\nThis is the rare case in nootropics where 1 + 1 actually equals 3.`
+      },
+      {
+        heading: "The Science Behind It",
+        content: `Most nootropic claims are either overblown or under-researched. This one isn't.\n\nA 2008 study published in *Biological Psychology* found that 100mg of L-Theanine combined with 50mg of caffeine significantly improved accuracy on attention-switching tasks and reduced mind-wandering compared to caffeine alone. A 2014 review in the *Journal of Functional Foods* pulled together 11 separate human studies and concluded the combination consistently improves attention, alertness, and reaction time while reducing the negative side effects of caffeine.\n\nA 2019 systematic review went further, finding the combination reliably improved performance on demanding cognitive tasks (working memory, attention-switching, error detection) across diverse populations — students, professionals, older adults.\n\nIn plain English: this isn't biohacker folklore. It's one of the few nootropic combinations with enough human research that mainstream researchers actually agree it works.`
+      },
+      {
+        heading: "The Right Dosage Ratio",
+        content: `This is where most beginners mess it up. The two most common mistakes:\n\n**Mistake 1: Taking L-Theanine without enough caffeine.** L-Theanine alone doesn't do much for most people. You need the caffeine to give it something to balance.\n\n**Mistake 2: Taking the wrong ratio.** The research consistently uses a **2:1 ratio of L-Theanine to caffeine**. Not 1:1, not 3:1 — two-to-one.\n\nPractical dosages that work for most people:\n\n**Light stack:** 100mg caffeine + 200mg L-Theanine\n\n**Standard stack:** 200mg caffeine + 400mg L-Theanine\n\n**Heavy stack:** 300mg caffeine + 600mg L-Theanine (only for people with caffeine tolerance)\n\nFor reference: an 8oz cup of brewed coffee has about 95mg of caffeine. A typical energy drink has 150–200mg. A 200mg caffeine pill is roughly equivalent to two strong cups of coffee.\n\nIf you're new to nootropics entirely, start with the light stack. You can always go up; you can't undo "I took too much and felt weird for four hours." Look for Suntheanine — the patented, pharmaceutical-grade form of L-Theanine used in most clinical trials. It's meaningfully more bioavailable than generic L-Theanine.`,
+        links: [
+          { text: "Buy L-Theanine (Suntheanine) on Amazon", url: amzn("l-theanine suntheanine 200mg") },
+          { text: "Buy Caffeine Pills on Amazon", url: amzn("caffeine pills 200mg") }
+        ]
+      },
+      {
+        heading: "When and How to Take It",
+        content: `Timing matters more than most people realize.\n\n**Take it in the morning or early afternoon, never after 2pm.** Caffeine has a half-life of 5–6 hours, which means caffeine you take at 4pm is still working at 10pm. This wrecks sleep, and bad sleep cancels out every cognitive benefit you got from the stack.\n\n**Take it on an empty or light stomach.** Both compounds absorb faster and feel more effective when you haven't just eaten a heavy meal. Most people take it 30 minutes before they want to focus.\n\n**Take both at the same time.** L-Theanine and caffeine work synergistically when they hit your system together. Taking them an hour apart loses most of the benefit.\n\nYou can take it as two separate capsules (one caffeine, one L-Theanine) or as a single combined capsule. Combined capsules are more convenient; separate ones give you more control over the ratio if you want to experiment.\n\nAlso worth knowing: if you already drink coffee, you don't need caffeine pills at all. Just add 200mg of L-Theanine to your morning coffee. The stack works the same way.`
+      },
+      {
+        heading: "What to Expect",
+        content: `If you take this stack correctly, here's what most people report within the first hour:\n\n- Clean, sustained focus without the "wired" feeling\n- Easier time staying on one task instead of jumping between tabs\n- Less anxiety than caffeine alone usually produces\n- No jitters, even at doses that would normally cause them\n- Smooth wind-down at the end of the day instead of a crash\n\nWhat you won't feel: a dramatic, can't-miss-it surge of energy. The effect is subtle in a way that's actually the point. You don't feel "on drugs" — you just feel like the better, more focused version of yourself for 3–4 hours.\n\nA common reaction from first-timers: "Wait, is it working? I just feel… normal but more focused." That's exactly right. That's what it's supposed to feel like.`
+      },
+      {
+        heading: "Who Should Be Careful With This Stack",
+        content: `The Caffeine + L-Theanine combination is one of the safest nootropic stacks available, but it isn't right for everyone:\n\n**If you're caffeine-sensitive,** start with 50mg of caffeine + 100mg of L-Theanine. Some people genuinely can't tolerate more.\n\n**If you're on stimulant medications** (Adderall, Ritalin, Vyvanse, Concerta), adding caffeine on top stacks the stimulation in ways your prescriber needs to weigh in on. The risk isn't the L-Theanine — it's the caffeine. Talk to them first.\n\n**If you have anxiety disorders** or panic disorder, even low-dose caffeine can trigger symptoms. L-Theanine helps, but it doesn't fully cancel out the underlying sensitivity. Start at half doses and assess.\n\n**If you have heart conditions** or high blood pressure, talk to a doctor before adding any caffeine to your routine.\n\n**If you're pregnant or breastfeeding,** L-Theanine doesn't have enough safety research in pregnancy. Skip it.\n\nNone of this is meant to scare you off. For the vast majority of healthy adults, this stack is genuinely safer than the coffee they already drink — because the L-Theanine softens the side effects.\n\nThis is exactly why the NootraGenie quiz includes a medication interaction filter. If you're on any of the prescription categories above, take the quiz before adding caffeine to your routine. It will flag the interactions specific to your situation.`
+      },
+      {
+        heading: "How Much It Costs",
+        content: `This is the part most people don't believe until they check Amazon.\n\nA 30-day supply of caffeine pills (200mg, 100 capsules) is around **$8**. A 30-day supply of L-Theanine (200mg, 60 capsules — you take two per dose) is around **$12**. Combined: roughly **$15–20/month** for the entire stack at standard dosages.\n\nFor comparison, a single bottle of a "premium focus blend" supplement from most direct-to-consumer brands costs $40–60/month, and contains underdosed versions of the same two ingredients plus a bunch of filler. The simple version is dramatically better — and dramatically cheaper.`
+      },
+      {
+        heading: "Where Caffeine + L-Theanine Fits in a Bigger Stack",
+        content: `If you decide to go beyond this combination later, here's where it fits:\n\n**For sharper focus on demanding work:** Add **Alpha-GPC** (300mg) for mental energy on hard cognitive tasks. It works on the acetylcholine system, which complements the dopamine/adrenaline boost from caffeine.\n\n**For long-term memory and brain health:** Add **Lion's Mane** (1,000mg daily) over a period of weeks. It works on a different timescale than caffeine — long-term brain support rather than acute focus.\n\n**For stress under pressure:** Add **Rhodiola Rosea** (200–400mg) for high-stress workdays. It pairs well with caffeine without competing.\n\nBut honestly? If you only ever take Caffeine and L-Theanine, you've captured 70% of the benefit of nootropics for 10% of the complexity and cost. Most people don't actually need more than this.`,
+        links: [
+          { text: "Buy Alpha-GPC on Amazon", url: amzn("alpha gpc 300mg choline") },
+          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane fruiting body dual extract") },
+          { text: "Buy Rhodiola Rosea on Amazon", url: amzn("rhodiola rosea 500mg standardized extract") }
+        ]
+      },
+      {
+        heading: "Get Your Personalized Stack",
+        content: `Caffeine + L-Theanine is the universal starting point, but the right next additions depend on your specific goals, budget, and any medications you're on. Take the free 2-minute NootraGenie quiz and get a protocol built around your actual situation. If Caffeine + L-Theanine is all you need, the quiz will tell you that — and save you the $40/month you might've been about to spend on something fancier.`,
+        cta: true
+      }
+    ]
   }
 ];
 
