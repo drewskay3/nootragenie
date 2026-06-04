@@ -395,7 +395,6 @@ export function BlogNav() {
       </Link>
       <div className="blog-nav-links">
         <Link to="/blog">Blog</Link>
-        <Link to="/methodology">How it works</Link>
         <Link to="/" className="nav-cta">Take the Quiz</Link>
       </div>
     </nav>
@@ -500,100 +499,6 @@ export function ArticlePage({ article }) {
               )}
             </div>
           ))}
-        </div>
-        <div className="article-disclaimer">
-          *These statements have not been evaluated by the FDA. This content is for informational purposes only and does not constitute medical advice.
-          Product links may be affiliate links — we earn a small commission at no extra cost to you.
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function MethodologyPage() {
-  return (
-    <>
-      <style>{blogStyles}</style>
-      <div className="article-page">
-        <BlogNav />
-        <div className="article-header">
-          <Link to="/blog" className="article-back">← Back to blog</Link>
-          <div className="article-meta">
-            <span className="article-cat">About</span>
-          </div>
-          <h1>How NootraGenie Works</h1>
-          <p className="article-desc">
-            What our recommendations are built on, where they stop, and how we make money — in plain language.
-          </p>
-        </div>
-        <div className="article-body">
-          <div className="article-section">
-            <h2>What we actually do</h2>
-            <p>
-              NootraGenie is a free tool that turns your answers to a short quiz into a personalized
-              nootropic protocol. We are not a supplement brand and we don't sell anything ourselves.
-              We map your primary goal, secondary goal, experience level, caffeine sensitivity, budget,
-              current supplements, dietary restrictions, and — importantly — your prescription
-              medications to a curated set of well-studied compounds, then assemble a stack, a daily
-              schedule, and an honest timeline for when each piece tends to kick in.
-            </p>
-          </div>
-          <div className="article-section">
-            <h2>How compounds are chosen</h2>
-            <p>
-              Every compound in our library was selected because it has a recognized mechanism and a
-              body of human research behind it — not because it's trending. Each recommendation card
-              shows an evidence-strength label (Strong, Moderate, Emerging, or Limited) so you can see,
-              at a glance, how settled the science is. We'd rather tell you a compound's human evidence
-              is still "Emerging" than oversell it. Dosages reflect commonly studied ranges and are
-              adjusted down if you tell us you're sensitive to stimulants.
-            </p>
-          </div>
-          <div className="article-section">
-            <h2>The medication safety filter</h2>
-            <p>
-              This is the part most supplement quizzes skip. When you tell us about prescription
-              medications — SSRIs, MAOIs, blood thinners, ADHD stimulants, thyroid medication and others —
-              we remove compounds with documented interaction risks entirely, and flag others that need
-              caution or a conversation with your prescriber. This filter is a safety net, not a
-              substitute for medical advice. It can't know your full history, your doses, or how your
-              body responds.
-            </p>
-          </div>
-          <div className="article-section">
-            <h2>What this is not</h2>
-            <p>
-              NootraGenie does not provide medical advice, diagnosis, or treatment, and nothing here has
-              been evaluated by the FDA. Supplements can interact with medications and health conditions
-              in ways no quiz can fully account for. Always talk to a qualified healthcare provider
-              before starting anything new — especially if you take prescription medication, are pregnant
-              or nursing, or manage a chronic condition. Introduce one supplement at a time so you can
-              tell what's actually working.
-            </p>
-          </div>
-          <div className="article-section">
-            <h2>How we make money</h2>
-            <p>
-              The tool is free because some of the product links are affiliate links — if you buy through
-              them, we may earn a small commission at no extra cost to you. Commissions never change which
-              compounds we recommend; the stack is built from your answers before any link is attached.
-              That separation is deliberate, and we'd rather lose a sale than distort a recommendation.
-            </p>
-          </div>
-          <div className="article-section">
-            <h2>Who's behind it</h2>
-            <p>
-              NootraGenie is an independent project built and maintained by a solo founder who got tired of
-              supplement advice that ignored medication safety and buried the evidence. {/* TODO: Andrew — replace this with a short personal bio and any relevant background. Real authorship strengthens trust and SEO (Google rewards it on health topics). */}
-              Have a correction or a compound you think we should add? Email{" "}
-              <a href="mailto:nootragenie@gmail.com" style={{ color: "var(--forest)" }}>nootragenie@gmail.com</a>.
-            </p>
-            <div className="article-cta-box">
-              <h3>Find your perfect stack</h3>
-              <p>Take the free 2-minute quiz and get a personalized protocol built for your brain, budget, and goals — with medication safety checks built in.</p>
-              <Link to="/" className="article-cta-btn">Build My Stack →</Link>
-            </div>
-          </div>
         </div>
         <div className="article-disclaimer">
           *These statements have not been evaluated by the FDA. This content is for informational purposes only and does not constitute medical advice.

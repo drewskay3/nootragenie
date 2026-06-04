@@ -1,5 +1,5 @@
-const AMZN_TAG = "nootragenie-20";
-const amzn = (q) => `https://www.amazon.com/s?k=${encodeURIComponent(q)}&tag=${AMZN_TAG}`;
+const ND_BASE = "https://goto.nootropicsdepot.com/c/7226280/3444335/46321?u=";
+const nd = (slug) => `${ND_BASE}https://nootropicsdepot.com/${slug}`;
 
 const articles = [
   {
@@ -19,18 +19,18 @@ const articles = [
         heading: "The Core Stack: Three Compounds With Real Evidence",
         content: `**1. Ashwagandha (KSM-66, 300–600mg)** — The single most-studied adaptogen for anxiety. Multiple randomized controlled trials have shown clinically meaningful reductions in cortisol and self-reported anxiety scales over 8-week protocols. The KSM-66 extract is the version used in most of the high-quality research, so spending a few extra dollars on it instead of a generic ashwagandha is worth it. Effects build over 2–4 weeks. You won't feel a dose. You'll notice that things that used to spike you don't spike you as hard. Take with food, ideally in the evening — some people find it slightly sedating, which is useful at the end of the day.\n\n**2. L-Theanine (200–400mg, Suntheanine)** — A non-sedating amino acid found naturally in green tea. L-Theanine increases alpha brain wave activity, the pattern associated with relaxed alertness — calm but not foggy. Unlike most anxiolytics, it doesn't impair cognitive performance. It can be taken acutely (works in 30–60 minutes) for situational anxiety like meetings, social events, or flights, or daily as part of a baseline stack. Suntheanine is the patented, pharmaceutical-grade form used in most clinical trials and is meaningfully more bioavailable than generic L-theanine.\n\n**3. Magnesium L-Threonate (Magtein, 1500–2000mg)** — Most magnesium supplements barely cross the blood-brain barrier. Magnesium L-Threonate is the exception — it was specifically developed at MIT for brain bioavailability. Magnesium is involved in regulating NMDA receptor activity, which is one of the mechanisms by which an over-reactive stress response gets locked in. Most adults are mildly deficient in magnesium, and the symptoms of deficiency (anxiety, sleep disruption, muscle tension) overlap heavily with anxiety presentations. Take in the evening — many people sleep noticeably better within a week.`,
         links: [
-          { text: "Buy Ashwagandha KSM-66 on Amazon", url: amzn("ashwagandha ksm-66 600mg standardized") },
-          { text: "Buy L-Theanine on Amazon", url: amzn("l-theanine suntheanine 200mg") },
-          { text: "Buy Magnesium L-Threonate on Amazon", url: amzn("magnesium l-threonate magtein 2000mg") }
+          { text: "Buy Ashwagandha KSM-66 on Nootropics Depot", url: nd("ksm-66-ashwagandha-extract-300mg-capsules") },
+          { text: "Buy L-Theanine on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy Magnesium L-Threonate on Nootropics Depot", url: nd("magtein-magnesium-l-threonate-capsules") }
         ]
       },
       {
         heading: "Supporting Compounds (Add Once Core Is Stable)",
         content: `Once you've been on the core stack for 4 weeks and have a baseline, these are the next compounds to consider. Add one at a time so you can isolate what's actually doing what.\n\n**Apigenin (50mg, evening)** — A flavonoid found naturally in chamomile, and the active compound that gives chamomile tea its calming reputation. Apigenin is a partial benzodiazepine receptor agonist — it engages the same receptor system as benzos but with a much weaker effect. The result is a gentle, non-habit-forming sedative effect, particularly useful for sleep-related anxiety (the kind where racing thoughts keep you awake). Take 30–60 minutes before bed.\n\n**Bacopa Monnieri (300–600mg, Bacognize)** — Best known for memory and cognitive support, but Bacopa also has consistent clinical evidence for reducing anxiety. The mechanism is different from the others — it appears to work through gradual modulation of serotonin and GABA receptors over 8–12 weeks. This is a long-game compound. You won't feel it for the first month. By month three, most users report a meaningful reduction in baseline rumination. Take with a fatty meal for absorption.\n\n**Saffron Extract (28–30mg, Affron)** — Mostly known as a mood compound, but the same studies showing anti-depressant effects also show anxiolytic effects. Particularly useful for the anxiety-depression overlap — when low mood and worry come as a package. Mild and well-tolerated.`,
         links: [
-          { text: "Buy Apigenin on Amazon", url: amzn("apigenin 50mg supplement") },
-          { text: "Buy Bacopa Bacognize on Amazon", url: amzn("bacopa monnieri bacognize 600mg") },
-          { text: "Buy Saffron Extract on Amazon", url: amzn("saffron extract 88.5mg affron") }
+          { text: "Buy Apigenin on Nootropics Depot", url: nd("apigenin-capsules") },
+          { text: "Buy Bacopa Bacognize on Nootropics Depot", url: nd("bacognize-bacopa-monnieri-extract-capsules") },
+          { text: "Buy Saffron Extract on Nootropics Depot", url: nd("affron-saffron-extract-capsules") }
         ]
       },
       {
@@ -69,18 +69,18 @@ const articles = [
         heading: "The Core Stack: Three Compounds Worth Starting With",
         content: `**1. L-Tyrosine (500–1500mg)** — Tyrosine is the amino acid precursor to dopamine and norepinephrine, the two neurotransmitters most directly involved in attention regulation. Under cognitive load, stress, or sleep deprivation, your brain depletes these neurotransmitters faster than it can rebuild them. Supplemental tyrosine gives the synthesis pathway more raw material to work with. The clinical research is most consistent in stress and sleep-deprivation contexts — military studies have shown improved cognitive performance under sustained operational pressure. Take it on an empty stomach, 30–45 minutes before you need to focus. Start at 500mg and titrate up. Important: tyrosine works best for the kind of mental fatigue that builds across a long day, not as a fast-acting "now" stimulant.\n\n**2. Rhodiola Rosea (200–400mg, 3% rosavins / 1% salidroside)** — A herbal adaptogen with the strongest evidence base of any in this category. Rhodiola has been studied for mental fatigue, stress-related burnout, and cognitive performance under pressure. Several controlled trials have shown meaningful improvements in attention and reaction time, particularly in people running on insufficient sleep. It's gentle, non-stimulating in the caffeine sense, but you'll notice a clear "easier to start tasks" quality within the first week. Quality matters here — look for SHR-5 extract or a comparable standardized form. Cheap rhodiola is often barely active.\n\n**3. Alpha-GPC (300–600mg)** — Your brain runs attention on acetylcholine. Alpha-GPC is the most bioavailable choline source available — it crosses the blood-brain barrier efficiently and is converted into acetylcholine. The combination of more dopamine raw material (tyrosine) and more acetylcholine raw material (Alpha-GPC) is the closest you can reasonably get to mimicking the neurotransmitter profile that prescription stimulants influence — in a much milder, slower-building way. Some people get headaches from Alpha-GPC; if that happens, drop to 150mg and reassess.`,
         links: [
-          { text: "Buy L-Tyrosine on Amazon", url: amzn("l-tyrosine 500mg capsules") },
-          { text: "Buy Rhodiola Rosea on Amazon", url: amzn("rhodiola rosea 500mg standardized extract") },
-          { text: "Buy Alpha-GPC on Amazon", url: amzn("alpha gpc 300mg choline") }
+          { text: "Buy L-Tyrosine on Nootropics Depot", url: nd("l-tyrosine-capsules") },
+          { text: "Buy Rhodiola Rosea on Nootropics Depot", url: nd("rhodiola-rosea-capsules-3-rosavins-1-salidroside") },
+          { text: "Buy Alpha-GPC on Nootropics Depot", url: nd("alpha-gpc-capsules") }
         ]
       },
       {
         heading: "Supporting Compounds (Add Once Core Stack Is Stable)",
         content: `Once you've been on the core stack for 3–4 weeks and have a baseline, these are the next compounds to consider. Don't add them all at once — introduce one at a time so you can tell what's actually doing what.\n\n**Caffeine + L-Theanine (100mg / 200mg)** — The single most reliable, well-tolerated cognitive combination available. Caffeine alone produces jittery, anxious focus. L-theanine smooths the rough edges, leaving you with calm, sustained attention. The 1:2 caffeine-to-theanine ratio is the most studied. If you already drink coffee, just add 200mg of L-theanine to it. This pairing is especially useful for the morning ramp-up that many people with ADHD-style attention struggle with.\n\n**Lion's Mane Fruiting Body (500–1000mg, dual-extracted)** — A long-game compound that supports nerve growth factor (NGF) production. The benefits build over 4–8 weeks of consistent use. Users typically report sharper recall, easier word-finding, and an improved ability to hold complex thoughts together. Make sure the label says "fruiting body" — mycelium-on-grain products are mostly starch and far less potent.\n\n**Saffron Extract (28–30mg, standardized)** — A sleeper compound with surprisingly strong evidence for both mood and attention in adults. A few small but well-controlled trials have shown saffron extract performing comparably to low-dose methylphenidate in pediatric ADHD. The adult evidence is more limited but encouraging. Saffron is mild, well-tolerated, and pairs well with the rest of the stack.`,
         links: [
-          { text: "Buy L-Theanine on Amazon", url: amzn("l-theanine suntheanine 200mg") },
-          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane fruiting body dual extract") },
-          { text: "Buy Saffron Extract on Amazon", url: amzn("saffron extract 88.5mg affron") }
+          { text: "Buy L-Theanine on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy Lion's Mane on Nootropics Depot", url: nd("lions-mane-mushroom-capsules-8-1-extract") },
+          { text: "Buy Saffron Extract on Nootropics Depot", url: nd("affron-saffron-extract-capsules") }
         ]
       },
       {
@@ -123,9 +123,9 @@ const articles = [
         heading: "Natural vs. Synthetic Nootropics",
         content: `Not all nootropics are created equal.\n\n**Natural nootropics** include ingredients like Lion's Mane mushroom (memory + nerve support), Rhodiola Rosea (stress + endurance), and Bacopa Monnieri (learning + recall). These have centuries of traditional use backed by modern clinical research.\n\n**Synthetic nootropics** are lab-created compounds that can be more potent — but often come with trade-offs in terms of side effects and safety data.\n\nAt NootraGenie, the focus is on clean, effective compounds that work with your brain, not against it.`,
         links: [
-          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane mushroom supplement fruiting body 500mg") },
-          { text: "Buy Rhodiola on Amazon", url: amzn("rhodiola rosea 400mg 3% rosavins") },
-          { text: "Buy Bacopa on Amazon", url: amzn("bacopa monnieri 300mg 50% bacosides") },
+          { text: "Buy Lion's Mane on Nootropics Depot", url: nd("lions-mane-mushroom-capsules-8-1-extract") },
+          { text: "Buy Rhodiola on Nootropics Depot", url: nd("rhodiola-rosea-capsules-3-rosavins-1-salidroside") },
+          { text: "Buy Bacopa on Nootropics Depot", url: nd("synapsa-bacopa-monnieri-extract-capsules") },
         ]
       },
       {
@@ -160,14 +160,14 @@ const articles = [
         heading: "How Lion's Mane Works",
         content: `Lion's Mane (Hericium erinaceus) contains two unique compound groups — hericenones and erinacines — that stimulate the production of Nerve Growth Factor (NGF) in the brain.\n\nNGF is the protein your nervous system uses to grow, maintain, and repair neurons. It's why a child's brain is a sponge and why an aging brain gradually loses processing power — NGF production naturally declines with age.\n\nWhen you take Lion's Mane consistently, you're supporting the biological process of neurogenesis — your brain growing new neural connections. This manifests as:\n\n- Clearer thinking and reduced brain fog\n- Better word recall and verbal fluency\n- Improved ability to hold complex ideas in working memory\n- Potential neuroprotective effects against cognitive decline\n\n**The catch:** Lion's Mane is a slow builder. Most people don't notice significant effects until weeks 2-4, with full benefits emerging around 8-12 weeks. It's not a "feel it today" compound. It's an investment in your brain's infrastructure.\n\n**Dose:** 500mg of dual-extracted fruiting body (not mycelium on grain) daily.\n**Cost:** $15-22/month`,
         links: [
-          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane mushroom supplement fruiting body 500mg") },
+          { text: "Buy on Nootropics Depot", url: nd("lions-mane-mushroom-capsules-8-1-extract") },
         ]
       },
       {
         heading: "How Alpha-GPC Works",
         content: `Alpha-GPC (alpha-glycerophosphocholine) is the most bioavailable form of choline — a nutrient that's the direct precursor to acetylcholine, your brain's primary neurotransmitter for attention, memory encoding, and muscle control.\n\nThink of acetylcholine as the "signal strength" of your neural communication. When levels are optimal, thoughts are crisp, focus is sharp, and memory encoding is efficient. When levels are low, you get brain fog, difficulty concentrating, and that frustrating feeling of information going in one ear and out the other.\n\nAlpha-GPC works faster than Lion's Mane because it's supplying a raw material your brain uses immediately, rather than stimulating a growth process. Effects include:\n\n- Sharper focus during demanding cognitive tasks\n- Faster information processing\n- Improved memory formation and recall\n- Better mind-muscle connection (relevant for athletes)\n\n**The catch:** Some people experience headaches from choline supplementation, especially at higher doses. If this happens, reduce to 150mg or switch to CDP-Choline (Citicoline), which is a gentler alternative. Also, Alpha-GPC doesn't "build" anything — when you stop taking it, the benefits stop. It's fuel, not construction.\n\n**Dose:** 300mg daily with food.\n**Cost:** $14-20/month`,
         links: [
-          { text: "Buy Alpha-GPC on Amazon", url: amzn("alpha gpc 300mg choline supplement") },
+          { text: "Buy on Nootropics Depot", url: nd("alpha-gpc-capsules") },
         ]
       },
       {
@@ -202,9 +202,9 @@ const articles = [
         heading: "The $30 Starter Stack",
         content: `These three compounds were chosen because they each target a different mechanism, they're well-studied, they're safe for most people, and they're cheap.\n\n**1. L-Theanine — 200mg daily ($8-12/month)**\n\nThis is the perfect first nootropic because you'll feel it on day one. L-Theanine is an amino acid found in green tea that promotes alpha brain wave activity — the brain state associated with calm, alert focus. If you drink coffee, take L-Theanine with it. The combination is one of the most well-studied nootropic pairings in existence: caffeine provides the energy, L-Theanine smooths out the anxiety and jitters. It's like upgrading your coffee from regular to premium.\n\n**2. Magnesium L-Threonate — 2000mg daily ($15-22/month)**\n\nMost people are magnesium deficient and don't know it. Magnesium L-Threonate (branded as Magtein) is the only form clinically shown to cross the blood-brain barrier effectively. It supports synaptic density, nervous system calm, and deep sleep architecture. Take it 30-60 minutes before bed. Within the first week, most people notice better sleep — falling asleep faster, fewer wake-ups, more vivid dreams. Better sleep means better cognition the next day. It's the foundation everything else builds on.\n\n**3. Creatine Monohydrate — 5g daily ($5-8/month)**\n\nYes, the gym supplement. Creatine is one of the most studied compounds in all of sports science, and recent research shows it's equally important for your brain. It serves as a direct ATP energy buffer for neural activity, improving working memory and processing speed. It's especially effective when you're under stress or sleep-deprived — exactly when you need cognitive support most. No loading phase needed. Just 5g daily, mixed in water, any time of day. It takes 2-4 weeks to saturate, then the effects are consistent.`,
         links: [
-          { text: "Buy L-Theanine on Amazon", url: amzn("l-theanine suntheanine 200mg") },
-          { text: "Buy Magnesium L-Threonate on Amazon", url: amzn("magnesium l-threonate magtein") },
-          { text: "Buy Creatine on Amazon", url: amzn("creatine monohydrate powder") },
+          { text: "Buy on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy on Nootropics Depot", url: nd("magtein-magnesium-l-threonate-capsules") },
+          { text: "Buy on Nootropics Depot", url: nd("creatine-monohydrate-powder") },
         ]
       },
       {
@@ -243,18 +243,18 @@ const articles = [
         heading: "The Core Focus Stack (3 Compounds)",
         content: `This is the foundation. If you're new to nootropics or on a budget, start here and add nothing else for at least 4 weeks.\n\n**1. L-Theanine (200mg)** — The fastest-acting compound in this stack. L-Theanine promotes alpha brain wave activity, which is the neural signature of calm, focused attention. If you drink coffee, this is a game-changer: it eliminates the jitters and anxiety while preserving (and enhancing) the focus. You'll feel it within 30-60 minutes.\n\n**2. Lion's Mane Fruiting Body (500mg, dual-extracted)** — This is your long-game compound. Lion's Mane stimulates Nerve Growth Factor (NGF) production, which supports neurogenesis — your brain literally growing new neural connections. It takes 2-4 weeks of consistent use to notice effects, but users consistently report clearer thinking, better word recall, and improved ability to hold complex ideas in working memory. Make sure you're getting fruiting body extract, not mycelium on grain.\n\n**3. Alpha-GPC (300mg)** — The most bioavailable choline source available. Choline is the precursor to acetylcholine, your brain's primary neurotransmitter for memory encoding and sustained attention. Alpha-GPC crosses the blood-brain barrier efficiently and provides the raw material your brain needs to maintain focus during demanding cognitive work.`,
         links: [
-          { text: "Buy L-Theanine on Amazon", url: amzn("l-theanine suntheanine 200mg") },
-          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane mushroom supplement fruiting body 500mg") },
-          { text: "Buy Alpha-GPC on Amazon", url: amzn("alpha gpc 300mg choline supplement") },
+          { text: "Buy on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy on Nootropics Depot", url: nd("lions-mane-mushroom-capsules-8-1-extract") },
+          { text: "Buy on Nootropics Depot", url: nd("alpha-gpc-capsules") },
         ]
       },
       {
         heading: "The Extended Focus Stack (Add-Ons)",
         content: `Once you've established the core stack for 4+ weeks and confirmed you tolerate it well, these compounds can take your focus protocol further.\n\n**Rhodiola Rosea (400mg)** — An adaptogen that fights mental fatigue at the cellular level. Rhodiola supports dopamine metabolism, which means sustained drive and motivation without the crash cycle of stimulants. Take it on an empty stomach in the morning, 20 minutes before food. Cycle 5 days on, 2 days off.\n\n**Creatine Monohydrate (5g)** — Most people think creatine is just for muscles. It's not. Creatine serves as a direct energy buffer for your brain, improving working memory and processing speed — especially under conditions of stress or sleep deprivation. It takes 2-4 weeks to saturate brain stores. No need to cycle.\n\n**Omega-3 (1500mg EPA/DHA)** — The structural building blocks of brain cell membranes. Not a "felt" effect like L-Theanine, but Omega-3 supports the neuroplasticity that makes all other nootropics work better. Think of it as maintaining the hardware that runs the software.`,
         links: [
-          { text: "Buy Rhodiola on Amazon", url: amzn("rhodiola rosea 400mg 3% rosavins") },
-          { text: "Buy Creatine on Amazon", url: amzn("creatine monohydrate powder") },
-          { text: "Buy Omega-3 on Amazon", url: amzn("omega 3 fish oil high epa dha") },
+          { text: "Buy on Nootropics Depot", url: nd("rhodiola-rosea-capsules-3-rosavins-1-salidroside") },
+          { text: "Buy on Nootropics Depot", url: nd("creatine-monohydrate-powder") },
+          { text: "Buy on Nootropics Depot", url: nd("omega-3-fish-oil-softgels") },
         ]
       },
       {
@@ -297,8 +297,8 @@ const articles = [
         heading: "The Right Dosage Ratio",
         content: `This is where most beginners mess it up. The two most common mistakes:\n\n**Mistake 1: Taking L-Theanine without enough caffeine.** L-Theanine alone doesn't do much for most people. You need the caffeine to give it something to balance.\n\n**Mistake 2: Taking the wrong ratio.** The research consistently uses a **2:1 ratio of L-Theanine to caffeine**. Not 1:1, not 3:1 — two-to-one.\n\nPractical dosages that work for most people:\n\n**Light stack:** 100mg caffeine + 200mg L-Theanine\n\n**Standard stack:** 200mg caffeine + 400mg L-Theanine\n\n**Heavy stack:** 300mg caffeine + 600mg L-Theanine (only for people with caffeine tolerance)\n\nFor reference: an 8oz cup of brewed coffee has about 95mg of caffeine. A typical energy drink has 150–200mg. A 200mg caffeine pill is roughly equivalent to two strong cups of coffee.\n\nIf you're new to nootropics entirely, start with the light stack. You can always go up; you can't undo "I took too much and felt weird for four hours." Look for Suntheanine — the patented, pharmaceutical-grade form of L-Theanine used in most clinical trials. It's meaningfully more bioavailable than generic L-Theanine.`,
         links: [
-          { text: "Buy L-Theanine (Suntheanine) on Amazon", url: amzn("l-theanine suntheanine 200mg") },
-          { text: "Buy Caffeine Pills on Amazon", url: amzn("caffeine pills 200mg") }
+          { text: "Buy on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy on Nootropics Depot", url: nd("caffeine-capsules") }
         ]
       },
       {
@@ -321,9 +321,9 @@ const articles = [
         heading: "Where Caffeine + L-Theanine Fits in a Bigger Stack",
         content: `If you decide to go beyond this combination later, here's where it fits:\n\n**For sharper focus on demanding work:** Add **Alpha-GPC** (300mg) for mental energy on hard cognitive tasks. It works on the acetylcholine system, which complements the dopamine/adrenaline boost from caffeine.\n\n**For long-term memory and brain health:** Add **Lion's Mane** (1,000mg daily) over a period of weeks. It works on a different timescale than caffeine — long-term brain support rather than acute focus.\n\n**For stress under pressure:** Add **Rhodiola Rosea** (200–400mg) for high-stress workdays. It pairs well with caffeine without competing.\n\nBut honestly? If you only ever take Caffeine and L-Theanine, you've captured 70% of the benefit of nootropics for 10% of the complexity and cost. Most people don't actually need more than this.`,
         links: [
-          { text: "Buy Alpha-GPC on Amazon", url: amzn("alpha gpc 300mg choline") },
-          { text: "Buy Lion's Mane on Amazon", url: amzn("lions mane fruiting body dual extract") },
-          { text: "Buy Rhodiola Rosea on Amazon", url: amzn("rhodiola rosea 500mg standardized extract") }
+          { text: "Buy on Nootropics Depot", url: nd("alpha-gpc-capsules") },
+          { text: "Buy on Nootropics Depot", url: nd("lions-mane-mushroom-capsules-8-1-extract") },
+          { text: "Buy on Nootropics Depot", url: nd("rhodiola-rosea-capsules-3-rosavins-1-salidroside") }
         ]
       },
       {
