@@ -3,6 +3,66 @@ const nd = (slug) => `${ND_BASE}https://nootropicsdepot.com/${slug}`;
 
 const articles = [
   {
+    slug: "can-you-take-ashwagandha-with-antidepressants",
+    title: "Can You Take Ashwagandha With Antidepressants? A Medication-Safe Guide (2026)",
+    description: "Millions of people take SSRIs, SNRIs, or other antidepressants and want to add ashwagandha for stress and anxiety support. Here's what the evidence actually says about the interactions — by antidepressant class.",
+    date: "June 2026",
+    readTime: "9 min read",
+    category: "Medication Safety",
+    heroEmoji: "⚕",
+    sections: [
+      {
+        heading: "Why This Question Gets Asked So Much",
+        content: `Ashwagandha (Withania somnifera) has become one of the most popular supplements in the world, and for good reason — the clinical evidence behind it for stress, cortisol reduction, and anxiety is stronger than almost any other adaptogen. KSM-66, the standardized extract used in most high-quality research, has multiple randomized controlled trials showing meaningful reductions in perceived stress and cortisol over 8-week protocols.\n\nAt the same time, antidepressants are among the most commonly prescribed medications in the U.S. SSRIs like sertraline (Zoloft), escitalopram (Lexapro), and fluoxetine (Prozac) are taken by tens of millions of people — many of whom still experience residual anxiety, sleep issues, or stress that they want to address with supplements.\n\nSo the overlap is enormous, and the question is a real one. Unfortunately, most answers online are either vague to the point of uselessness ("consult your doctor") or confidently wrong. This article gives you the actual picture — what the evidence says, where the real risks are, what's likely safe, and what to avoid entirely — broken down by antidepressant class.`
+      },
+      {
+        heading: "The Short Answer (Then the Detail)",
+        content: `For most people on SSRIs at standard doses, ashwagandha is generally considered low risk at standard doses — but the data is thin, the absence of documented problems doesn't mean proven safety, and a few specific combinations deserve more caution than others.\n\nThe interactions that matter most aren't all about serotonin syndrome (which gets most of the online attention). They involve sedation stacking, liver enzyme effects, thyroid hormone modulation, and blood pressure. Some of these are more clinically relevant than the serotonin concern.\n\nHere's the breakdown by antidepressant class.`
+      },
+      {
+        heading: "SSRIs (Zoloft, Lexapro, Prozac, Celexa, Paxil)",
+        content: `SSRIs are the most common antidepressant class, and the most commonly asked-about in combination with ashwagandha.\n\n**The serotonin syndrome concern:** This gets the most attention online, but it's also the least documented. No published case reports confirm serotonin syndrome from combining ashwagandha with an SSRI. The theoretical mechanism exists — ashwagandha may have mild serotonergic activity — but the clinical data does not support it being a meaningful risk at standard doses. That said, theoretical risk isn't zero risk, especially at higher doses of either compound.\n\n**The more practical concerns:**\n\n**Sedation:** Ashwagandha has genuine calming and mildly sedating properties. Combined with SSRIs that also cause drowsiness (paroxetine/Paxil in particular), the additive sedation can be noticeable — especially in the first few weeks. Start at half dose (150–300mg KSM-66) if you're on an SSRI with sedating properties.\n\n**CYP450 enzyme interaction:** Ashwagandha may inhibit certain liver enzymes involved in drug metabolism (CYP2D6 and CYP3A4). Several SSRIs — particularly fluoxetine (Prozac) and paroxetine (Paxil) — are metabolized through these same pathways. The theoretical result is higher circulating levels of the SSRI. This is low-probability but worth knowing, especially at higher ashwagandha doses.\n\n**Practical guidance:** At standard doses (300–600mg KSM-66), most people on SSRIs can add ashwagandha with low risk. Start at the lower end, take it in the evening with food, and mention it to your prescriber at your next appointment. Monitor for increased drowsiness or any changes in how your SSRI feels.`,
+        links: [
+          { text: "Buy Ashwagandha KSM-66 on Nootropics Depot", url: nd("ksm-66-ashwagandha-extract-300mg-capsules") }
+        ]
+      },
+      {
+        heading: "SNRIs (Effexor, Cymbalta, Pristiq)",
+        content: `SNRIs block the reuptake of both serotonin and norepinephrine, which adds a layer of consideration beyond SSRIs.\n\n**Norepinephrine pathway:** Ashwagandha supports the adrenal axis and can influence catecholamine activity. In combination with SNRIs that block norepinephrine reuptake, there's a theoretical amplification of the noradrenergic effect — potentially presenting as increased anxiety, restlessness, or elevated heart rate in sensitive individuals. This is not well-documented in the literature but worth watching for.\n\n**Blood pressure:** SNRIs can raise blood pressure, and high-dose ashwagandha has mild blood-pressure-lowering effects. In most cases these effects partially offset each other — but the interaction is unpredictable depending on your specific medication, dose, and physiology. If you're monitoring your blood pressure while on an SNRI, track it after adding ashwagandha.\n\n**Practical guidance:** More caution warranted than with SSRIs. Start at 150–300mg KSM-66, take in the evening, and give it 2 weeks before increasing dose. Discuss with your prescriber if you're on venlafaxine (Effexor) or duloxetine (Cymbalta) at higher doses.`
+      },
+      {
+        heading: "Tricyclic Antidepressants (Amitriptyline, Nortriptyline, Clomipramine)",
+        content: `Tricyclics are an older class with broader effects and a narrower therapeutic window — meaning the gap between an effective dose and a problematic one is smaller than with SSRIs.\n\n**Sedation stacking is the primary concern here.** Tricyclics are highly sedating, and ashwagandha's calming properties can significantly amplify this. The combination can produce excessive drowsiness, cognitive slowing, and impaired coordination — particularly at higher ashwagandha doses or in older adults.\n\n**Anticholinergic amplification:** Tricyclics have anticholinergic properties (dry mouth, constipation, cognitive effects). Ashwagandha's mild cholinergic-modulating activity creates a theoretical interaction here, though it's not well-characterized.\n\n**Practical guidance:** Use with significant caution. If your prescriber approves the combination, start at the absolute lowest ashwagandha dose (150mg KSM-66) and do not increase without monitoring. Taking it during the day rather than evening may reduce the sedation overlap, since most people take tricyclics at night.`
+      },
+      {
+        heading: "MAOIs (Phenelzine, Tranylcypromine, Selegiline)",
+        content: `MAOIs are the oldest antidepressant class and the one with the most significant interaction profile with everything — food, supplements, and other medications.\n\n**Do not combine ashwagandha with an MAOI without explicit prescriber approval.** MAOIs inhibit the enzymes that break down monoamine neurotransmitters (serotonin, dopamine, norepinephrine). Any compound with monoaminergic activity — including ashwagandha — can produce unpredictable and potentially serious reactions.\n\nThis is a hard stop for self-directed supplementation. If you're on an MAOI and want to explore stress or anxiety support through supplements, that conversation needs to happen with your prescribing physician first.`
+      },
+      {
+        heading: "What About Thyroid Medications?",
+        content: `This section isn't about antidepressants specifically, but it's critical context because many people on antidepressants are also on thyroid medication — particularly levothyroxine (Synthroid, Armour).\n\n**Ashwagandha directly affects thyroid hormone levels.** Multiple studies have shown it increases T3 and T4 in people with subclinical hypothyroidism. This is presented as a benefit in supplement marketing, but if you're on a carefully calibrated thyroid prescription, ashwagandha can shift your thyroid hormone levels and destabilize your dosing.\n\nThis is one of the clearest and most clinically significant interactions in the entire supplement world. If you're on levothyroxine or any other thyroid medication, ashwagandha should be excluded from your protocol — or only used under close monitoring with your endocrinologist.`
+      },
+      {
+        heading: "Safe Alternatives If You Want to Avoid the Interaction Entirely",
+        content: `If you're on an antidepressant and want stress or anxiety support without the ashwagandha interaction concern, these compounds have cleaner interaction profiles:\n\n**L-Theanine (200mg)** — Promotes alpha brain wave activity and calm focus. No known interactions with SSRIs, SNRIs, or tricyclics at standard doses. One of the best-tolerated compounds in the nootropics category. Works within 30–60 minutes for situational anxiety.\n\n**Magnesium L-Threonate (Magtein, 1500–2000mg)** — Addresses a near-universal deficiency, supports sleep architecture and nervous system calm. No pharmacological interactions with antidepressants. One of the highest-leverage additions for people on SSRIs who still struggle with sleep or low-level anxiety.\n\n**Omega-3 (1500mg EPA/DHA)** — Clinically studied for adjunctive support alongside antidepressants. Omega-3 is actually one of the few supplements with positive evidence for additive benefit when combined with antidepressant therapy — not just safe, but potentially synergistic.`,
+        links: [
+          { text: "Buy L-Theanine on Nootropics Depot", url: nd("l-theanine-capsules") },
+          { text: "Buy Magnesium L-Threonate on Nootropics Depot", url: nd("magtein-magnesium-l-threonate-capsules") },
+          { text: "Buy Omega-3 on Nootropics Depot", url: nd("omega-3-fish-oil-softgels") }
+        ]
+      },
+      {
+        heading: "The Bottom Line",
+        content: `Ashwagandha and SSRIs: generally low risk at standard doses, worth mentioning to your prescriber, start low.\n\nAshwagandha and SNRIs: moderate caution warranted, monitor blood pressure and noradrenergic symptoms, discuss with prescriber.\n\nAshwagandha and tricyclics: significant caution, sedation stacking is a real concern, prescriber approval required.\n\nAshwagandha and MAOIs: do not combine without explicit physician oversight.\n\nAshwagandha and thyroid medication: exclude ashwagandha entirely.\n\nThe honest reality is that most supplement sites either blanket-approve these combinations or blanket-refuse to address them. The actual answer depends on which antidepressant you're on, what dose, your physiology, and what else you're taking. This is why medication-aware personalization matters — and why a one-size-fits-all supplement recommendation is often worse than no recommendation at all.`
+      },
+      {
+        heading: "Get a Protocol Built Around Your Medications",
+        content: `NootraGenie's quiz is the only nootropic recommendation tool we know of that runs a medication interaction filter on every result. If you're on an antidepressant and want to know exactly which supplements are safe for your specific situation — and which to avoid — take the free 2-minute quiz. It will build a protocol around your actual medication profile, not a generic template.`,
+        cta: true
+      }
+    ]
+  },
+  {
     slug: "best-nootropics-for-anxiety-without-benzodiazepines",
     title: "Best Nootropics for Anxiety Without Benzodiazepines (2026 Guide)",
     description: "A research-backed approach to managing anxiety with non-prescription compounds. Honest comparisons, the medication interactions nobody warns you about, and an 8-week protocol for building the stack safely.",
