@@ -461,6 +461,26 @@ export function ArticlePage({ article }) {
     );
   }
 
+  // Update document meta tags for SEO
+  if (typeof document !== "undefined") {
+    document.title = `${article.title} | NootraGenie`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", article.description);
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute("content", article.title);
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute("content", article.description);
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute("content", `https://nootragenie.com/blog/${article.slug}`);
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", `https://nootragenie.com/blog/${article.slug}`);
+  }
+
   return (
     <>
       <style>{blogStyles}</style>
