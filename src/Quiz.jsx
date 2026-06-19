@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 // ── Data ──
 const QUESTIONS = [
@@ -300,6 +300,45 @@ const MED_INTERACTIONS = {
   },
 };
 
+const EVIDENCE = {
+  lions_mane:         { level: "Emerging",  note: "Promising human trials for cognition and mood, but the evidence base is still small." },
+  l_theanine:         { level: "Strong",    note: "Well-studied for calm, focused attention — especially paired with caffeine." },
+  alpha_gpc:          { level: "Moderate",  note: "Solid support for cholinergic function; most cognition studies are short-term." },
+  bacopa:             { level: "Strong",    note: "Multiple randomized trials show memory and recall gains over 8–12 weeks." },
+  ashwagandha:        { level: "Strong",    note: "Repeated RCTs show meaningful reductions in stress and cortisol." },
+  magnesium:          { level: "Emerging",  note: "L-Threonate has strong rationale and animal data; human cognition trials are early." },
+  rhodiola:           { level: "Moderate",  note: "Reasonable evidence for mental fatigue and stress resilience." },
+  tyrosine:           { level: "Moderate",  note: "Best-supported under acute stress, sleep loss, or heavy cognitive load." },
+  omega3:             { level: "Strong",    note: "Broad, well-established support for long-term brain and cardiovascular health." },
+  creatine:           { level: "Moderate",  note: "Cognitive effects are clearest under stress, fatigue, or sleep deprivation." },
+  cdp_choline:        { level: "Moderate",  note: "Decent support for attention and a cleaner choline option than many alternatives." },
+  phosphatidylserine: { level: "Moderate",  note: "Modest evidence for memory and cortisol regulation." },
+  apigenin:           { level: "Limited",   note: "Mostly preclinical so far; used for gentle sleep support based on early data." },
+};
+
+const CURRENT_TO_SUPP = {
+  fish_oil:           "omega3",
+  magnesium:          "magnesium",
+  creatine:           "creatine",
+  lions_mane:         "lions_mane",
+  ashwagandha:        "ashwagandha",
+  caffeine_l_theanine:"l_theanine",
+};
+
+const ONSET_BUCKETS = [
+  { key: "day1", label: "First day",   window: "Hours",      blurb: "Fast-acting — you may feel these the same day." },
+  { key: "wk1",  label: "Week 1–2",    window: "1–2 weeks",  blurb: "Early shifts as levels start to build." },
+  { key: "wk4",  label: "Weeks 2–4",   window: "2–4 weeks",  blurb: "Most compounds reach a steady, noticeable effect." },
+  { key: "wk8",  label: "Weeks 4–12",  window: "4–12 weeks", blurb: "Slow-builders deliver their full benefit here." },
+];
+function onsetBucket(onset = "") {
+  const o = onset.toLowerCase();
+  if (o.includes("min") || o.includes("hour") || o.includes("same night") || o.includes("same day")) return "day1";
+  if (o.includes("3–7 day") || o.includes("3-7 day") || o.includes("1–2 week") || o.includes("1-2 week")) return "wk1";
+  if (o.includes("2–4 week") || o.includes("2-4 week") || o.includes("3–4 week") || o.includes("3-4 week")) return "wk4";
+  return "wk8";
+}
+
 function buildStack(answers) {
   const { goal, secondary, experience, stimulant, budget, current = [], restrictions = [], medications = [] } = answers;
   const isTaking = (s) => current.includes(s);
@@ -334,6 +373,9 @@ function buildStack(answers) {
   const sec = SECONDARY_MAP[secondary] || [];
   const combined = [...new Set([...primary, ...sec])];
 
+  const takingSupps = new Set(current.map((c) => CURRENT_TO_SUPP[c]).filter(Boolean));
+  const alreadyHave = combined.filter((k) => takingSupps.has(k)).map((k) => SUPPS[k].name);
+
   const filtered = combined.filter((k) => {
     // Medication exclusions
     if (excluded.has(k)) return false;
@@ -350,12 +392,14 @@ function buildStack(answers) {
   const selected = filtered.slice(0, maxSupps).map((k) => {
     const s = { ...SUPPS[k] };
     if (stimulant === "sensitive" && s.sensitiveDose) s.dosage = s.sensitiveDose;
-    // Attach medication warnings to individual supplements
-    if (suppWarnings[k]) {
-      s.medWarning = suppWarnings[k].join(" ");
-    }
+    if (EVIDENCE[k]) s.evidence = EVIDENCE[k];
+    if (suppWarnings[k]) s.medWarning = suppWarnings[k].join(" ");
     return s;
   });
+
+  const timeline = ONSET_BUCKETS
+    .map((b) => ({ ...b, supps: selected.filter((s) => onsetBucket(s.onset) === b.key).map((s) => s.name) }))
+    .filter((b) => b.supps.length > 0);
 
   const morning = selected.filter((s) => s.timing.toLowerCase().includes("morning")).map((s) => s.name);
   const evening = selected.filter((s) => s.timing.toLowerCase().includes("evening") || s.timing.toLowerCase().includes("bed")).map((s) => s.name);
@@ -379,6 +423,8 @@ function buildStack(answers) {
     warnings,
     medNotes: hasMeds ? medNotes : [],
     excludedSupps: hasMeds ? [...excluded] : [],
+    alreadyHave,
+    timeline,
     requirePrescriberConsult,
   };
 }
@@ -1168,7 +1214,83 @@ body {
   .ng-supp-top{flex-direction:column}
   .ng-pills{gap:20px}
 }
+
+/* ── Share / Save bar ── */
+.ng-share-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 28px}
+.ng-share-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;padding:12px 22px;border-radius:60px;cursor:pointer;background:linear-gradient(135deg,var(--forest) 0%,var(--forest2) 100%);color:white;border:1px solid var(--forest);box-shadow:0 4px 18px rgba(13,107,63,0.22);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+.ng-share-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(13,107,63,0.28)}
+.ng-share-btn svg{width:16px;height:16px}
+.ng-share-btn-alt{background:var(--white);color:var(--ink2);border:1px solid var(--bg2);box-shadow:var(--shadow-sm)}
+.ng-share-btn-alt:hover{color:var(--ink);border-color:var(--ink4);box-shadow:var(--shadow-md)}
+.ng-share-hint{text-align:center;font-size:12px;color:var(--ink4);font-weight:300;margin:-16px 0 28px}
+.ng-affil-note{font-size:12px;color:var(--ink4);font-weight:300;margin:-8px 0 18px;line-height:1.5}
+
+/* ── Evidence badges ── */
+.ng-evidence{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:2px 0 10px}
+.ng-ev-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Azeret Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;padding:4px 10px;border-radius:40px;white-space:nowrap}
+.ng-ev-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ng-ev-strong{color:#0D6B3F;background:rgba(13,107,63,0.10)}
+.ng-ev-moderate{color:#B07D12;background:rgba(230,168,23,0.14)}
+.ng-ev-emerging{color:#6B7280;background:rgba(107,114,128,0.12)}
+.ng-ev-limited{color:#8A8F98;background:rgba(138,143,152,0.12)}
+.ng-ev-note{font-size:12.5px;color:var(--ink3);font-weight:300;line-height:1.5}
+
+/* ── Already in your stack ── */
+.ng-already{background:rgba(13,107,63,0.05);border:1px solid rgba(46,204,113,0.25);border-radius:var(--radius-sm);padding:18px 22px;margin:8px 0 28px}
+.ng-already-title{font-family:'Azeret Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--forest);margin-bottom:8px;font-weight:600}
+.ng-already p{font-size:14px;color:var(--ink2);line-height:1.6;font-weight:300}
+
+/* ── Timeline ── */
+.ng-timeline{margin:4px 0 8px}
+.ng-tl-row{display:flex;gap:16px}
+.ng-tl-marker{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:5px}
+.ng-tl-dot{width:12px;height:12px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 4px rgba(13,107,63,0.12)}
+.ng-tl-line{flex:1;width:2px;background:var(--bg2);margin:4px 0;min-height:28px}
+.ng-tl-body{padding-bottom:22px}
+.ng-tl-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.ng-tl-when{font-family:'Azeret Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--forest);font-weight:600}
+.ng-tl-label{font-family:'Crimson Pro',serif;font-size:18px;color:var(--ink)}
+.ng-tl-blurb{font-size:13px;color:var(--ink3);font-weight:300;line-height:1.5;margin-bottom:4px}
+.ng-tl-supps{font-size:13px;color:var(--ink2);font-weight:500}
+.ng-tl-foot{font-size:12px;color:var(--ink4);font-weight:300;margin:0 0 28px;line-height:1.5}
+
+/* ── Accessibility ── */
+.ng-opt{font-family:inherit;text-align:left;width:100%;-webkit-appearance:none;appearance:none}
+.ng-ft-tag{font-family:inherit;-webkit-appearance:none;appearance:none}
+.ng-restart{background:none;border:none;font-family:inherit;padding:0}
+.ng-opt:focus-visible,.ng-share-btn:focus-visible,.ng-start-btn:focus-visible,.ng-btn:focus-visible,.ng-ft-tag:focus-visible,.ng-restart:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+
+/* ── Print ── */
+@media print{
+  .ng-bg,.ng-grain,.ng-share-bar,.ng-share-hint,.ng-cta-box,.ng-restart,.ng-quiz-top{display:none!important}
+  body{background:#fff!important}
+  .ng-app,.ng-content,.ng-results{background:#fff!important}
+  .ng-results{padding-top:12px!important;max-width:100%!important}
+  .ng-supp,.ng-notes-card,.ng-schedule,.ng-med-section,.ng-warn{box-shadow:none!important;border:1px solid #e3e6e2!important;break-inside:avoid;page-break-inside:avoid}
+  .ng-supp:hover{transform:none!important}
+  a[href]::after{content:""}
+}
 `;
+
+// ── Shareable-result codec ──
+function encodeAnswers(a = {}) {
+  try {
+    const payload = { g: a.goal, s: a.secondary, e: a.experience, t: a.stimulant, b: a.budget, k: a.commitment, c: a.current || [], r: a.restrictions || [], m: a.medications || [] };
+    const json = JSON.stringify(payload);
+    return btoa(unescape(encodeURIComponent(json))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  } catch { return ""; }
+}
+
+function decodeAnswers(code) {
+  try {
+    const b64 = code.replace(/-/g, "+").replace(/_/g, "/");
+    const json = decodeURIComponent(escape(atob(b64)));
+    const p = JSON.parse(json);
+    const answers = { goal: p.g, secondary: p.s, experience: p.e, stimulant: p.t, budget: p.b, commitment: p.k, current: Array.isArray(p.c) ? p.c : [], restrictions: Array.isArray(p.r) ? p.r : [], medications: Array.isArray(p.m) ? p.m : [] };
+    if (!answers.goal || !GOAL_MAP[answers.goal]) return null;
+    return answers;
+  } catch { return null; }
+}
 
 // ── Component ──
 export default function NootraGenie() {
@@ -1181,6 +1303,47 @@ export default function NootraGenie() {
   const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const params = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (params.code && !results) {
+      const decoded = decodeAnswers(params.code);
+      if (decoded) {
+        setAnswers(decoded);
+        try { setResults(buildStack(decoded)); } catch { /* ignore bad link */ }
+        setScreen("results");
+        window.scrollTo(0, 0);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.code]);
+
+  const copyToClipboard = async (url) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const ta = document.createElement("textarea"); ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+      }
+      setCopied(true); setTimeout(() => setCopied(false), 2200);
+    } catch { /* silently ignore */ }
+  };
+
+  const shareProtocol = async () => {
+    const code = encodeAnswers(answers);
+    const url = `${window.location.origin}/r/${code}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "My NootraGenie Protocol", text: "Here's the personalized nootropic stack NootraGenie built for me:", url }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    copyToClipboard(url);
+  };
+
+  const printProtocol = () => window.print();
 
   const handleSubscribe = async () => {
     if (!email.includes("@") || submitting) return;
@@ -1231,11 +1394,15 @@ export default function NootraGenie() {
     setAnalysisStep(0);
     setError(null);
     for (let i = 0; i < ANALYSIS_STEPS.length; i++) {
-      await new Promise((r) => setTimeout(r, 550 + Math.random() * 350));
+      await new Promise((r) => setTimeout(r, 180 + Math.random() * 160));
       setAnalysisStep(i + 1);
     }
     try {
-      setResults(buildStack(answers));
+      const built = buildStack(answers);
+      setResults(built);
+      const code = encodeAnswers(answers);
+      if (code) navigate(`/r/${code}`, { replace: true });
+      if (window.gtag) window.gtag("event", "quiz_complete", { event_category: "engagement" });
       setScreen("results");
     } catch (e) {
       setError("Something went wrong. Please try again.");
@@ -1245,7 +1412,8 @@ export default function NootraGenie() {
 
   const restart = () => {
     setScreen("welcome"); setStep(0); setAnswers({});
-    setResults(null); setError(null); setEmail(""); setSaved(false);
+    setResults(null); setError(null); setEmail(""); setSaved(false); setCopied(false);
+    navigate("/");
   };
 
   return (
@@ -1271,7 +1439,7 @@ export default function NootraGenie() {
               </p>
               <div className="ng-pills">
                 <div className="ng-pill">
-                  <div className="ng-pill-num">47</div>
+                  <div className="ng-pill-num">13</div>
                   <div className="ng-pill-label">Compounds</div>
                 </div>
                 <div className="ng-pill">
@@ -1283,11 +1451,15 @@ export default function NootraGenie() {
                   <div className="ng-pill-label">To finish</div>
                 </div>
               </div>
-              <button className="ng-start-btn" onClick={() => setScreen("quiz")}>
+              <button className="ng-start-btn" onClick={() => { setScreen("quiz"); if (window.gtag) window.gtag("event", "quiz_start", { event_category: "engagement" }); }}>
                 Build My Stack
               </button>
               <p className="ng-fine">Free · No signup · Instant results</p>
-              <Link to="/blog" style={{ marginTop: '12px', fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Read the blog →</Link>
+              <div style={{ marginTop: '12px', display: 'flex', gap: '18px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Link to="/blog" style={{ fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Read the blog →</Link>
+                <Link to="/interactions" style={{ fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Med interactions →</Link>
+                <Link to="/methodology" style={{ fontSize: '13px', color: 'var(--ink4)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>How it works →</Link>
+              </div>
             </div>
           )}
 
@@ -1313,10 +1485,10 @@ export default function NootraGenie() {
                   <div>
                     <div className="ng-freetext-tags">
                       {["ADHD diagnosis", "Night shifts", "Headache-prone", "Intermittent fasting", "Over 50", "Perimenopause"].map((t) => (
-                        <span key={t} className="ng-ft-tag" onClick={() => {
+                        <button type="button" key={t} className="ng-ft-tag" onClick={() => {
                           const c = answers[q.id] || "";
                           setAnswers({ ...answers, [q.id]: c ? `${c}, ${t.toLowerCase()}` : t.toLowerCase() });
-                        }}>{t}</span>
+                        }}>{t}</button>
                       ))}
                     </div>
                     <textarea
@@ -1399,6 +1571,18 @@ export default function NootraGenie() {
                     </div>
                   </div>
 
+                  <div className="ng-share-bar">
+                    <button className="ng-share-btn" onClick={shareProtocol}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                      {copied ? "Link copied!" : "Share protocol"}
+                    </button>
+                    <button className="ng-share-btn ng-share-btn-alt" onClick={printProtocol}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                      Save as PDF
+                    </button>
+                  </div>
+                  <p className="ng-share-hint">Your link reopens this exact protocol — bookmark it or send it to a friend.</p>
+
                   {answers.freetext && answers.freetext.trim() && (
                     <div className="ng-notes-card">
                       <div className="ng-notes-label">Your Notes</div>
@@ -1417,6 +1601,7 @@ export default function NootraGenie() {
                   )}
 
                   <div className="ng-section-title">Your Stack</div>
+                  <p className="ng-affil-note">Heads up: the links below are affiliate links — we may earn a small commission at no extra cost to you.</p>
 
                   {results.supplements.map((s, i) => (
                     <div className="ng-supp" key={i} style={{ animationDelay: `${i * 80}ms` }}>
@@ -1425,6 +1610,12 @@ export default function NootraGenie() {
                         <div className="ng-supp-dose">{s.dosage}</div>
                       </div>
                       {s.detail && <div className="ng-supp-detail">{s.detail}</div>}
+                      {s.evidence && (
+                        <div className={`ng-evidence ng-ev-${s.evidence.level.toLowerCase()}`}>
+                          <span className="ng-ev-badge"><span className="ng-ev-dot" />{s.evidence.level} evidence</span>
+                          <span className="ng-ev-note">{s.evidence.note}</span>
+                        </div>
+                      )}
                       <div className="ng-supp-reason">{s.reason}</div>
                       {s.medWarning && (
                         <div className="ng-supp-med-warn">{s.medWarning}</div>
@@ -1445,6 +1636,38 @@ export default function NootraGenie() {
                       )}
                     </div>
                   ))}
+
+                  {results.alreadyHave && results.alreadyHave.length > 0 && (
+                    <div className="ng-already">
+                      <div className="ng-already-title">✓ Already in your stack</div>
+                      <p>You're already taking {results.alreadyHave.length === 1 ? results.alreadyHave[0] : results.alreadyHave.slice(0, -1).join(", ") + " and " + results.alreadyHave.slice(-1)} — {results.alreadyHave.length === 1 ? "it's" : "they're"} part of what we'd recommend for your goal, so we left {results.alreadyHave.length === 1 ? "it" : "them"} off the list above. You're covered there.</p>
+                    </div>
+                  )}
+
+                  {results.timeline && results.timeline.length > 0 && (
+                    <>
+                      <div className="ng-section-title">What to expect &amp; when</div>
+                      <div className="ng-timeline">
+                        {results.timeline.map((b, i) => (
+                          <div className="ng-tl-row" key={i}>
+                            <div className="ng-tl-marker">
+                              <span className="ng-tl-dot" />
+                              {i < results.timeline.length - 1 && <span className="ng-tl-line" />}
+                            </div>
+                            <div className="ng-tl-body">
+                              <div className="ng-tl-head">
+                                <span className="ng-tl-when">{b.window}</span>
+                                <span className="ng-tl-label">{b.label}</span>
+                              </div>
+                              <div className="ng-tl-blurb">{b.blurb}</div>
+                              <div className="ng-tl-supps">{b.supps.join(" · ")}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="ng-tl-foot">Onset varies person to person — consistency matters more than any single dose.</p>
+                    </>
+                  )}
 
                   {results.schedule.length > 0 && (
                     <>
@@ -1507,10 +1730,11 @@ export default function NootraGenie() {
                     *These recommendations are for informational purposes only and do not constitute medical advice.
                     Always consult a qualified healthcare provider before starting any supplement regimen.
                     Product links may be affiliate links — we earn a small commission at no extra cost to you, which helps keep this tool free.
+                    {" "}<Link to="/methodology" style={{ color: "var(--ink3)", textDecoration: "underline", textUnderlineOffset: "2px" }}>How these recommendations are built →</Link>
                   </div>
 
                   <div style={{ textAlign: "center" }}>
-                    <span className="ng-restart" onClick={restart}>← Retake the quiz</span>
+                    <button type="button" className="ng-restart" onClick={restart}>← Retake the quiz</button>
                   </div>
                 </>
               )}

@@ -1,14 +1,12 @@
 {
+  "redirects": [
+    { "source": "/:path*", "has": [{ "type": "host", "value": "www.nootragenie.com" }], "destination": "https://nootragenie.com/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
-    {
-      "source": "/(.*).html",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
-      ]
-    }
+    { "source": "/(.*).html", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
   ]
 }

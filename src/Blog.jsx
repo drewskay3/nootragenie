@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import articles from "./articles";
+import { INTERACTION_PAGES, getInteractionBySlug, groupedByMedication } from "./interactions";
 
 const GenieLamp = ({ size = 40, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -384,7 +385,47 @@ body {
   .blog-nav-links a:not(.nav-cta) { display: none; }
   .blog-card { padding: 24px; }
 }
+
+/* ── Interaction pages ── */
+.ix-verdict{display:inline-flex;align-items:center;gap:9px;font-family:'Azeret Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:600;padding:9px 16px;border-radius:40px;margin-bottom:22px}
+.ix-verdict-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.ix-exclude{color:#B42318;background:rgba(180,35,24,0.10);border:1px solid rgba(180,35,24,0.22)}
+.ix-warn{color:#B07D12;background:rgba(230,168,23,0.12);border:1px solid rgba(230,168,23,0.28)}
+.ix-safety{background:rgba(13,107,63,0.05);border:1px solid rgba(13,107,63,0.18);border-left:3px solid var(--forest);border-radius:10px;padding:20px 24px;margin:28px 0}
+.ix-safety strong{display:block;margin-bottom:8px;color:var(--forest);font-size:15px}
+.ix-safety p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
+.ix-index-group{margin-bottom:34px}
+.ix-index-group h2{font-size:20px;margin-bottom:6px}
+.ix-index-group .ix-examples{font-size:13px;color:var(--ink3);margin-bottom:14px;font-weight:300}
+.ix-index-list{display:flex;flex-direction:column;gap:1px}
+.ix-index-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-radius:9px;text-decoration:none;background:var(--white);border:1px solid var(--bg2);transition:all 0.18s;color:var(--ink)}
+.ix-index-link:hover{border-color:var(--forest);transform:translateX(2px)}
+.ix-index-link .ix-name{font-size:15px;font-weight:500}
+.ix-tag{font-family:'Azeret Mono',monospace;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;padding:3px 9px;border-radius:30px;white-space:nowrap}
+.ix-tag-exclude{color:#B42318;background:rgba(180,35,24,0.10)}
+.ix-tag-warn{color:#B07D12;background:rgba(230,168,23,0.12)}
+.ix-related{margin-top:38px;padding-top:28px;border-top:1px solid var(--bg2)}
+.ix-related h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin-bottom:14px;font-weight:600}
+.ix-related a{display:block;color:var(--forest);text-decoration:none;padding:6px 0;font-size:15px}
+.ix-related a:hover{text-decoration:underline}
 `;
+
+function useSeo(title, description) {
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = title;
+    let tag = document.querySelector('meta[name="description"]');
+    let created = false;
+    if (!tag) { tag = document.createElement("meta"); tag.setAttribute("name", "description"); document.head.appendChild(tag); created = true; }
+    const prevDesc = tag.getAttribute("content");
+    tag.setAttribute("content", description);
+    return () => {
+      document.title = prevTitle;
+      if (created) tag.remove();
+      else if (prevDesc !== null) tag.setAttribute("content", prevDesc);
+    };
+  }, [title, description]);
+}
 
 export function BlogNav() {
   return (
@@ -395,6 +436,8 @@ export function BlogNav() {
       </Link>
       <div className="blog-nav-links">
         <Link to="/blog">Blog</Link>
+        <Link to="/interactions">Interactions</Link>
+        <Link to="/methodology">How it works</Link>
         <Link to="/" className="nav-cta">Take the Quiz</Link>
       </div>
     </nav>
@@ -524,6 +567,170 @@ export function ArticlePage({ article }) {
           *These statements have not been evaluated by the FDA. This content is for informational purposes only and does not constitute medical advice.
           Product links may be affiliate links — we earn a small commission at no extra cost to you.
         </div>
+      </div>
+    </>
+  );
+}
+
+export function MethodologyPage() {
+  useSeo("How NootraGenie Works | Methodology", "What our recommendations are built on, where they stop, and how we make money — in plain language.");
+  return (
+    <>
+      <style>{blogStyles}</style>
+      <div className="article-page">
+        <BlogNav />
+        <div className="article-header">
+          <Link to="/blog" className="article-back">← Back to blog</Link>
+          <div className="article-meta"><span className="article-cat">About</span></div>
+          <h1>How NootraGenie Works</h1>
+          <p className="article-desc">What our recommendations are built on, where they stop, and how we make money — in plain language.</p>
+        </div>
+        <div className="article-body">
+          <div className="article-section">
+            <h2>What we actually do</h2>
+            <p>NootraGenie is a free tool that turns your quiz answers into a personalized nootropic protocol. We map your goal, experience, caffeine sensitivity, budget, current supplements, dietary restrictions, and prescription medications to a curated set of well-studied compounds, then assemble a stack, a daily schedule, and an honest timeline for when each piece tends to kick in.</p>
+          </div>
+          <div className="article-section">
+            <h2>How compounds are chosen</h2>
+            <p>Every compound was selected because it has a recognized mechanism and a body of human research behind it. Each recommendation card shows an evidence-strength label (Strong, Moderate, Emerging, or Limited) so you can see how settled the science is. Dosages reflect commonly studied ranges and are adjusted down if you're sensitive to stimulants.</p>
+          </div>
+          <div className="article-section">
+            <h2>The medication safety filter</h2>
+            <p>When you tell us about prescription medications — SSRIs, MAOIs, blood thinners, ADHD stimulants, thyroid medication and others — we remove compounds with documented interaction risks entirely, and flag others that need caution. This filter is a safety net, not a substitute for medical advice. It can't know your full history, your doses, or how your body responds.</p>
+          </div>
+          <div className="article-section">
+            <h2>What this is not</h2>
+            <p>NootraGenie does not provide medical advice, diagnosis, or treatment. Nothing here has been evaluated by the FDA. Always talk to a qualified healthcare provider before starting anything new — especially if you take prescription medication, are pregnant or nursing, or manage a chronic condition.</p>
+          </div>
+          <div className="article-section">
+            <h2>How we make money</h2>
+            <p>The tool is free because some product links are affiliate links — if you buy through them, we may earn a small commission at no extra cost to you. Commissions never change which compounds we recommend; the stack is built from your answers before any link is attached.</p>
+          </div>
+          <div className="article-section">
+            <h2>Who's behind it</h2>
+            <p>NootraGenie is an independent project built by a solo founder who got tired of supplement advice that ignored medication safety. Have a correction or a compound you think we should add? Email <a href="mailto:nootragenie@gmail.com" style={{ color: "var(--forest)" }}>nootragenie@gmail.com</a>.</p>
+            <div className="article-cta-box">
+              <h3>Find your perfect stack</h3>
+              <p>Take the free 2-minute quiz and get a personalized protocol built for your brain, budget, and goals — with medication safety checks built in.</p>
+              <Link to="/" className="article-cta-btn">Build My Stack →</Link>
+            </div>
+          </div>
+        </div>
+        <div className="article-disclaimer">*These statements have not been evaluated by the FDA. For informational purposes only. Product links may be affiliate links.</div>
+      </div>
+    </>
+  );
+}
+
+export function InteractionsIndex() {
+  useSeo("Nootropic & Supplement Medication Interactions | NootraGenie", "Check whether common nootropics and supplements are safe to combine with prescription medications like SSRIs, blood thinners, ADHD stimulants, and thyroid medication.");
+  const groups = groupedByMedication();
+  return (
+    <>
+      <style>{blogStyles}</style>
+      <div className="article-page">
+        <BlogNav />
+        <div className="article-header">
+          <Link to="/blog" className="article-back">← Back to blog</Link>
+          <div className="article-meta"><span className="article-cat">Safety</span></div>
+          <h1>Supplement &amp; Medication Interactions</h1>
+          <p className="article-desc">Thinking about adding a nootropic while on a prescription? Find your medication below to see which supplements to avoid and which need caution. Always confirm with your pharmacist or prescriber first.</p>
+        </div>
+        <div className="article-body">
+          {groups.map((g) => (
+            <div className="ix-index-group" key={g.med.slug}>
+              <h2>{g.med.label}</h2>
+              <p className="ix-examples">e.g. {g.med.examples}</p>
+              <div className="ix-index-list">
+                {g.pages.map((p) => (
+                  <Link className="ix-index-link" to={`/interactions/${p.slug}`} key={p.slug}>
+                    <span className="ix-name">{p.supp.name} + {g.med.label}</span>
+                    <span className={`ix-tag ix-tag-${p.verdict}`}>{p.verdict === "exclude" ? "Avoid" : "Caution"}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div className="article-cta-box">
+            <h3>Not sure where to start?</h3>
+            <p>Take the free quiz — it asks about your medications and automatically filters out supplements that could interact, then builds a stack around what's left.</p>
+            <Link to="/" className="article-cta-btn">Build My Safe Stack →</Link>
+          </div>
+        </div>
+        <div className="article-disclaimer">*For informational purposes only. Not medical advice. Product links may be affiliate links.</div>
+      </div>
+    </>
+  );
+}
+
+export function InteractionDetail({ slug }) {
+  const page = getInteractionBySlug(slug);
+  useSeo(
+    page ? `Can You Take ${page.supp.name} With ${page.med.label}? | NootraGenie` : "Interaction Not Found | NootraGenie",
+    page ? `${page.supp.name} and ${page.med.label}: ${page.verdict === "exclude" ? "a combination to avoid without medical supervision" : "what to know before combining them"}. Always check with your pharmacist or prescriber.` : "This interaction page could not be found."
+  );
+  if (!page) {
+    return (
+      <>
+        <style>{blogStyles}</style>
+        <div className="article-page">
+          <BlogNav />
+          <div className="article-header">
+            <Link to="/interactions" className="article-back">← All interactions</Link>
+            <h1>Interaction not found</h1>
+            <p className="article-desc">We couldn't find that page. <Link to="/interactions">Browse all interactions →</Link></p>
+          </div>
+        </div>
+      </>
+    );
+  }
+  const isExclude = page.verdict === "exclude";
+  const related = INTERACTION_PAGES.filter((p) => p.medKey === page.medKey && p.slug !== page.slug).slice(0, 5);
+  return (
+    <>
+      <style>{blogStyles}</style>
+      <div className="article-page">
+        <BlogNav />
+        <div className="article-header">
+          <Link to="/interactions" className="article-back">← All interactions</Link>
+          <div className="article-meta"><span className="article-cat">Safety</span></div>
+          <h1>Can You Take {page.supp.name} With {page.med.label}?</h1>
+        </div>
+        <div className="article-body">
+          <div className={`ix-verdict ${isExclude ? "ix-exclude" : "ix-warn"}`}>
+            <span className="ix-verdict-dot" />
+            {isExclude ? "Avoid without medical supervision" : "Possible interaction — use caution"}
+          </div>
+          <div className="article-section">
+            <p>{isExclude ? (<><strong>Short answer: not without your prescriber's approval.</strong> NootraGenie's safety filter excludes {page.supp.name} for people taking {page.med.label}.</>) : (<><strong>Short answer: only with caution and medical guidance.</strong> {page.supp.name} can be combined with {page.med.label} by some people, but it's flagged because of how the two can interact.</>)}</p>
+          </div>
+          <div className="article-section">
+            <h2>What {page.supp.name} is</h2>
+            <p>{page.supp.blurb}</p>
+          </div>
+          <div className="article-section">
+            <h2>Why this combination needs care</h2>
+            <p>{isExclude ? page.note : page.detail}</p>
+            {isExclude && <p style={{ marginTop: 12 }}>{page.supp.name} is not something to add on your own while taking {page.med.label}. If you think it could help you, that's a conversation to have with your prescriber — not a decision to make from an article.</p>}
+          </div>
+          <div className="ix-safety">
+            <strong>Before you do anything</strong>
+            <p>Your prescriber and pharmacist know your full history, your doses, and your other medications — this page doesn't. Bring this combination up with them before starting anything new.</p>
+          </div>
+          <div className="article-cta-box">
+            <h3>Build a stack that respects your meds</h3>
+            <p>NootraGenie's free quiz asks what you take and automatically filters out supplements that could interact — then builds a personalized stack around what's safe for you.</p>
+            <Link to="/" className="article-cta-btn">Take the Free Quiz →</Link>
+          </div>
+          {related.length > 0 && (
+            <div className="ix-related">
+              <h3>Other supplements &amp; {page.med.label}</h3>
+              {related.map((r) => (<Link key={r.slug} to={`/interactions/${r.slug}`}>{r.supp.name} + {page.med.label} →</Link>))}
+              <Link to="/interactions" style={{ fontWeight: 600, marginTop: 6 }}>See all interactions →</Link>
+            </div>
+          )}
+        </div>
+        <div className="article-disclaimer">*For informational purposes only. Not medical advice. Product links may be affiliate links.</div>
       </div>
     </>
   );
