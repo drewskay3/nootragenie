@@ -1,7 +1,7 @@
 {
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [{ "type": "host", "value": "www.nootragenie.com" }],
       "destination": "https://nootragenie.com/:path*",
       "permanent": true
@@ -15,6 +15,7 @@
     {
       "source": "/assets/(.*)",
       "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
